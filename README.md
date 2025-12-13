@@ -1,11 +1,8 @@
-# 2048 with Classic Agents 
+# CS181-project-2048 — 2048 with Classic Agents
 
----
+A simple and brief realization of a modified **2048** game, accompanied with classic agent methods such as **Minimax**, plus brief visualization.
 
-This project is a simple and brief realization of the **2048** game, with an additional implementation of classic agent training methods like **Minimax**.
-
-The game's objective is to slide numbered tiles on a grid to combine them to create a tile with the number 2048. This version includes AI techniques to play the game automatically using some classic algorithms, accompanied with biref visualization of the 2048.
-![alt text](img/A_photo_for_the_game.png)
+![Game screenshot](img/A_photo_for_the_game.png)
 
 ## Features
 
@@ -15,18 +12,49 @@ The game's objective is to slide numbered tiles on a grid to combine them to cre
 
 ## Installation
 
-To run the game locally, make sure you have Python 3.x installed. Then clone the repository and run the game:
+Clone this repository:
 
 ```bash
-git clone https://github.com/RogerFyc/CS181-project-2048
+git clone https://github.com/RogerFyc/CS181-project-2048.git
+cd CS181-project-2048
 ```
+
 ## Getting Started
 
 ### Requirements
-- Python 3.x
-- Tkinter (usually bundled with Python on many platforms)
 
-### Run
+* Python 3.x
+* Tkinter (usually bundled with Python on many platforms)
+
+### Run (GUI)
+
 ```bash
 python puzzle.py
 ```
+
+## Project Structure (Typical)
+
+* `puzzle.py` — GUI / entry point
+* `logic.py` — core game mechanics (move/merge/spawn/win/lose)
+* `constants.py` — constants and UI settings
+* `img/` — images used in documentation
+
+## Contributing (Team Workflow)
+
+This repository is mainly for collaboration within our team.
+Please use feature branches and open a Pull Request before merging into `main`.
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
+## Attribution
+
+This repository is a derivative work based on:
+
+* **2048 Python** by Tay Yang Shun (yangshun/2048-python), MIT License
+
+And ultimately inspired by:
+
+* **2048** by Gabriele Cirulli (gabrielecirulli/2048), MIT License
+
