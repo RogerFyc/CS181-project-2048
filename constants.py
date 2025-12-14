@@ -63,3 +63,11 @@ KEY_UP_ALT2 = "i"
 KEY_DOWN_ALT2 = "k"
 KEY_LEFT_ALT2 = "j"
 KEY_RIGHT_ALT2 = "l"
+
+# --- AI controls ---
+KEY_TOGGLE_CONTROLLER = "m"   # 切换 Human/Minimax
+KEY_AI_STEP = "space"
+KEY_RESTART = "r"
+
+AI_DEPTH = 3                  # Minimax 搜索深度
+AI_DELAY_MS = 1000             # 自动模式每步间隔（毫秒）

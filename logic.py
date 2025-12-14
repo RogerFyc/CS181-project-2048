@@ -60,7 +60,7 @@ def game_state(mat):
     # check for win cell
     for i in range(len(mat)):
         for j in range(len(mat[0])):
-            if mat[i][j] == 2048:
+            if mat[i][j] == 32:
                 return 'win'
     # check for any zero entries
     for i in range(len(mat)):
@@ -158,8 +158,10 @@ def merge(mat, done):
                 done = True
     return mat, done
 
+DEBUG = False
+
 def up(game):
-    print("up")
+    if DEBUG: print("up")
     # return matrix after shifting up
     game = transpose(game)
     game, done = cover_up(game)
@@ -169,7 +171,7 @@ def up(game):
     return game, done
 
 def down(game):
-    print("down")
+    if DEBUG: print("down")
     # return matrix after shifting down
     game = reverse(transpose(game))
     game, done = cover_up(game)
@@ -179,7 +181,7 @@ def down(game):
     return game, done
 
 def left(game):
-    print("left")
+    if DEBUG: print("left")
     # return matrix after shifting left
     game, done = cover_up(game)
     game, done = merge(game, done)
@@ -187,7 +189,7 @@ def left(game):
     return game, done
 
 def right(game):
-    print("right")
+    if DEBUG: print("right")
     # return matrix after shifting right
     game = reverse(game)
     game, done = cover_up(game)
