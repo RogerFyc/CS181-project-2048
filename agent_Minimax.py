@@ -81,10 +81,10 @@ def _heuristic(mat):
 
     # 权重（你可以后续调参）
     return (
-        empty * 1000
+        empty * 500
         + _log2(max_tile) * 200
-        + smooth * 5
-        + mono * 2
+        + smooth * 100
+        + mono * 100
     )
 
 
