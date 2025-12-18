@@ -4,10 +4,16 @@ from tkinter import (
     Button, Toplevel
 )
 import random
+import os
 import logic
 import constants as c
 from agent_Minimax import MinimaxAgent
 from agent_Expectimax import ExpectimaxAgent
+try:
+    from agent_Qlearning import DQNAgent
+    DQN_AVAILABLE = True
+except ImportError:
+    DQN_AVAILABLE = False
 
 
 def _clone(mat):
@@ -41,8 +47,8 @@ class GameGrid(Frame):
         self.controller_var = StringVar(value="Human")   # "Human" or "AI"
         self.autoplay_var = BooleanVar(value=True)
 
-        # AI Type: Minimax / Expectimax
-        self.ai_type_var = StringVar(value="Minimax")    # "Minimax" or "Expectimax"
+        # AI Type: Minimax / Expectimax / DQN
+        self.ai_type_var = StringVar(value="Minimax")    # "Minimax", "Expectimax", or "DQN"
 
         self.last_move = "-"
         self.step_count = 0
@@ -109,6 +115,31 @@ class GameGrid(Frame):
         ai_type = self.ai_type_var.get()
         if ai_type == "Expectimax":
             return ExpectimaxAgent(depth=self.AI_DEPTH, special_pos=self.special_cell_pos)
+        elif ai_type == "DQN" and DQN_AVAILABLE:
+            # DQN agent 需要加载模型或创建新实例
+            # 如果提供了特殊格位置，使用它；否则启用自动检测
+            if self.special_cell_pos is not None:
+                agent = DQNAgent(special_pos=self.special_cell_pos, auto_detect_special=False)
+            else:
+                agent = DQNAgent(special_pos=None, auto_detect_special=True)
+                print("DQN agent: Special tile position not provided, enabling auto-detection")
+            
+            # 尝试加载已训练的模型
+            model_path = "dqn_2048_model.pth"
+            if os.path.exists(model_path):
+                try:
+                    agent.load(model_path)
+                    print(f"Loaded DQN model from {model_path}")
+                except Exception as e:
+                    print(f"Failed to load DQN model: {e}")
+                    print("Using untrained DQN agent")
+            else:
+                print("No DQN model found. Using untrained agent.")
+            
+            # 初始化前一个状态记录（用于特殊格检测）
+            self._prev_matrix = None
+            
+            return agent
         return MinimaxAgent(depth=self.AI_DEPTH, special_pos=self.special_cell_pos)
 
     def _on_ai_type_change(self):
@@ -123,7 +154,11 @@ class GameGrid(Frame):
     def _init_topbar(self):
         self.topbar = Frame(self)
         self.topbar.grid(row=0, column=0, sticky="ew", padx=8, pady=8)
-        self.topbar.grid_columnconfigure(6, weight=1)
+        # 根据是否有DQN调整列配置
+        if DQN_AVAILABLE:
+            self.topbar.grid_columnconfigure(7, weight=1)
+        else:
+            self.topbar.grid_columnconfigure(6, weight=1)
 
         # Controller: Human / AI
         Radiobutton(
@@ -136,7 +171,7 @@ class GameGrid(Frame):
             command=self._on_controller_change
         ).grid(row=0, column=1, padx=6)
 
-        # AI Type: Minimax / Expectimax
+        # AI Type: Minimax / Expectimax / DQN
         Label(self.topbar, text="AI Type:").grid(row=0, column=2, padx=(14, 4))
 
         Radiobutton(
@@ -148,15 +183,26 @@ class GameGrid(Frame):
             self.topbar, text="Expectimax", variable=self.ai_type_var, value="Expectimax",
             command=self._on_ai_type_change
         ).grid(row=0, column=4, padx=4)
+        
+        if DQN_AVAILABLE:
+            Radiobutton(
+                self.topbar, text="DQN", variable=self.ai_type_var, value="DQN",
+                command=self._on_ai_type_change
+            ).grid(row=0, column=5, padx=4)
+            auto_play_col = 6
+        else:
+            auto_play_col = 5
 
         # Auto-play
         Checkbutton(
             self.topbar, text="Auto-play", variable=self.autoplay_var,
             command=self._on_autoplay_change
-        ).grid(row=0, column=5, padx=10)
+        ).grid(row=0, column=auto_play_col, padx=10)
 
+        # 状态标签位置根据是否有DQN调整
+        status_col = 7 if DQN_AVAILABLE else 6
         self.status_label = Label(self.topbar, text="", anchor="w", justify="left")
-        self.status_label.grid(row=0, column=6, padx=10, sticky="ew")
+        self.status_label.grid(row=0, column=status_col, padx=10, sticky="ew")
 
     # ---------------- Canvas board (adaptive) ----------------
 
@@ -309,11 +355,19 @@ class GameGrid(Frame):
                 f"State: {state} ({self.KEY_TOGGLE_CONTROLLER}=Toggle, {self.KEY_RESTART}=Restart)"
             )
         else:
-            msg = (
-                f"Controller: AI ({ai_type}, depth={self.AI_DEPTH}) | Auto: {auto} | "
-                f"Steps: {self.step_count} | Last: {self.last_move} | State: {state} "
-                f"(Space=Step, {self.KEY_TOGGLE_CONTROLLER}=Toggle, {self.KEY_TOGGLE_AI_TYPE}=AIType, {self.KEY_RESTART}=Restart)"
-            )
+            # DQN agent 不显示 depth 参数
+            if ai_type == "DQN":
+                msg = (
+                    f"Controller: AI ({ai_type}) | Auto: {auto} | "
+                    f"Steps: {self.step_count} | Last: {self.last_move} | State: {state} "
+                    f"(Space=Step, {self.KEY_TOGGLE_CONTROLLER}=Toggle, {self.KEY_TOGGLE_AI_TYPE}=AIType, {self.KEY_RESTART}=Restart)"
+                )
+            else:
+                msg = (
+                    f"Controller: AI ({ai_type}, depth={self.AI_DEPTH}) | Auto: {auto} | "
+                    f"Steps: {self.step_count} | Last: {self.last_move} | State: {state} "
+                    f"(Space=Step, {self.KEY_TOGGLE_CONTROLLER}=Toggle, {self.KEY_TOGGLE_AI_TYPE}=AIType, {self.KEY_RESTART}=Restart)"
+                )
         self.status_label.configure(text=msg)
 
     # ---------------- End popup ----------------
@@ -387,6 +441,14 @@ class GameGrid(Frame):
 
         self.matrix = logic.new_game(c.GRID_LEN)
         self.history_matrixs = [_clone(self.matrix)]
+
+        # 重置前一个状态记录（用于DQN特殊格检测）
+        if DQN_AVAILABLE and isinstance(self.agent, DQNAgent):
+            self._prev_matrix = None
+            # 如果agent支持自动检测，重置检测状态
+            if hasattr(self.agent, 'special_pos_history'):
+                self.agent.special_pos_history = []
+                self.agent.detected_special_pos = None
 
         self._update_status()
         self.update_grid_cells()
@@ -468,11 +530,20 @@ class GameGrid(Frame):
             self._update_status()
             return
 
-        move = self.agent.choose_move(self.matrix)
+        # 对于DQN agent，传递上一个状态用于检测特殊格位置
+        prev_mat = None
+        if DQN_AVAILABLE and isinstance(self.agent, DQNAgent) and hasattr(self, '_prev_matrix'):
+            prev_mat = self._prev_matrix
+        
+        move = self.agent.choose_move(self.matrix, prev_mat=prev_mat)
         if move is None:
             self.ai_job = None
             self._update_status()
             return
+
+        # 保存当前状态作为下一个状态的前一个状态
+        if DQN_AVAILABLE and isinstance(self.agent, DQNAgent):
+            self._prev_matrix = _clone(self.matrix)
 
         self._try_move_by_name(move)
         self.ai_job = self.after(self.AI_DELAY_MS, self._ai_tick)
@@ -483,10 +554,20 @@ class GameGrid(Frame):
         if logic.game_state(self.matrix) != "not over":
             return
 
-        move = self.agent.choose_move(self.matrix)
+        # 对于DQN agent，传递上一个状态用于检测特殊格位置
+        prev_mat = None
+        if DQN_AVAILABLE and isinstance(self.agent, DQNAgent) and hasattr(self, '_prev_matrix'):
+            prev_mat = self._prev_matrix
+        
+        move = self.agent.choose_move(self.matrix, prev_mat=prev_mat)
         if move is None:
             self._update_status()
             return
+        
+        # 保存当前状态作为下一个状态的前一个状态
+        if DQN_AVAILABLE and isinstance(self.agent, DQNAgent):
+            self._prev_matrix = _clone(self.matrix)
+        
         self._try_move_by_name(move)
 
     # ---------------- Input handler ----------------
@@ -507,9 +588,21 @@ class GameGrid(Frame):
             self._on_controller_change()
             return
 
-        # toggle AI Type (Minimax <-> Expectimax)
+        # toggle AI Type (循环切换: Minimax -> Expectimax -> DQN -> Minimax)
         if key == self.KEY_TOGGLE_AI_TYPE:
-            self.ai_type_var.set("Expectimax" if self.ai_type_var.get() == "Minimax" else "Minimax")
+            current = self.ai_type_var.get()
+            if current == "Minimax":
+                next_type = "Expectimax"
+            elif current == "Expectimax":
+                if DQN_AVAILABLE:
+                    next_type = "DQN"
+                else:
+                    next_type = "Minimax"
+            elif current == "DQN":
+                next_type = "Minimax"
+            else:
+                next_type = "Minimax"
+            self.ai_type_var.set(next_type)
             self._on_ai_type_change()
             return
 
