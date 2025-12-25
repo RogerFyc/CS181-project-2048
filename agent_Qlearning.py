@@ -181,15 +181,16 @@ class DQNAgent:
         self.memory = ReplayBuffer(memory_size)
         
         # 奖励函数参数
-        self.large_tile_threshold = 32  # 大数字阈值
-        self.small_tile_threshold = 8   # 小数字阈值
-        self.large_penalty = -100       # 大数字进入特殊格惩罚
-        self.small_reward = 10          # 小数字进入特殊格奖励
-        self.terminal_penalty = -500    # 游戏结束惩罚（减少以平衡奖励）
+        self.large_tile_threshold = 32  # 大数字阈值（用于分级惩罚）
+        self.tile_2_reward = 20         # 数字2进入特殊格奖励（鼓励2进入）
+        self.base_penalty = -200       # 基础惩罚（>2的数字进入特殊格）
+        self.terminal_penalty = -3000   # 游戏结束惩罚（大幅增加，避免过早失败）
         self.merge_reward_scale = 20    # 合并奖励缩放（增加）
         self.step_reward = 1.0          # 每步基础奖励（鼓励持续游戏）
         self.empty_reward_scale = 2.0   # 空格奖励缩放
         self.max_tile_reward_scale = 5.0  # 最大块奖励缩放
+        # 分级惩罚参数（根据数字大小设置不同惩罚）
+        self.penalty_scale_factor = 100  # 惩罚缩放因子（数字越大惩罚越重，增加以更严厉）
     
     def detect_special_position(self, prev_mat, next_mat):
         """
@@ -376,7 +377,11 @@ class DQNAgent:
         return merge_value
     
     def _calculate_special_tile_penalty(self, state_mat, next_state_mat):
-        """计算特殊格惩罚/奖励"""
+        """
+        计算特殊格惩罚/奖励
+        策略：只有数字2可以进入特殊格（给予奖励），其他所有数字（>2）进入都受到惩罚
+        根据进入特殊格的数字大小设置分级惩罚（数字越大惩罚越重）
+        """
         special_pos = self.get_special_position()
         if special_pos is None:
             return 0.0
@@ -389,13 +394,35 @@ class DQNAgent:
         next_value = next_state_mat[i][j]
         
         # 如果特殊格上的值增加了，说明有tile进入了
-        if next_value > state_value and next_value > 2:
-            # 检查进入前的值（可能是移动前的值，或者合并后的值）
-            # 简化处理：如果当前值 >= 阈值，给予惩罚
-            if next_value >= self.large_tile_threshold:
-                penalty += self.large_penalty
-            elif next_value <= self.small_tile_threshold:
-                penalty += self.small_reward
+        if next_value > state_value:
+            # 只有数字2可以进入特殊格，给予奖励
+            if next_value == 2:
+                penalty += self.tile_2_reward
+            # 所有大于2的数字进入特殊格都受到惩罚
+            elif next_value > 2:
+                # 基础惩罚（所有>2的数字都有）
+                penalty += self.base_penalty
+                
+                # 根据数字大小（log2编码）增加分级惩罚
+                # 例如：4 -> log2=2, 8 -> log2=3, 16 -> log2=4, 32 -> log2=5, 64 -> log2=6, 128 -> log2=7
+                tile_log = _log2(next_value)
+                # 从4开始计算（log2(4)=2），每增加1级（翻倍），惩罚增加
+                base_log = 2  # log2(4) = 2
+                extra_penalty = (tile_log - base_log) * self.penalty_scale_factor
+                penalty += extra_penalty
+                
+                # 特别严重的惩罚：如果数字 >= 16
+                if next_value >= 16:
+                    penalty += -300  # 额外严重惩罚
+                # 如果数字 >= 32
+                if next_value >= 32:
+                    penalty += -500  # 更严重惩罚
+                # 如果数字 >= 64（接近获胜条件128的一半）
+                if next_value >= 64:
+                    penalty += -1000  # 极严重惩罚
+                # 如果数字 >= 128（达到或超过获胜条件）
+                if next_value >= 128:
+                    penalty += -2000  # 最严重惩罚（不应该让获胜数字进入特殊格）
         
         return penalty
     

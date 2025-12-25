@@ -14,3 +14,4 @@ torch>=1.9.0
 # 例如（CUDA 11.8）:
 # torch>=2.0.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
 
+

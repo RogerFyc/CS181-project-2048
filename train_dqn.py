@@ -3,7 +3,7 @@
 """
 使用此脚本训练 DQN Agent
 
-运行方式：
+运行方式： 
     python train_dqn.py
 
 或者修改参数后运行：
@@ -21,9 +21,9 @@ import random
 
 def main():
     parser = argparse.ArgumentParser(description='Train DQN Agent for 2048')
-    parser.add_argument('--episodes', type=int, default=10000,
+    parser.add_argument('--episodes', type=int, default=1000,
                         help='Number of training episodes (default: 10000)')
-    parser.add_argument('--save-freq', type=int, default= 500 ,
+    parser.add_argument('--save-freq', type=int, default= 100 ,
                         help='Save model every N episodes (default: 100)')
     parser.add_argument('--save-path', type=str, default='dqn_2048_model.pth',
                         help='Path to save model (default: dqn_2048_model.pth)')
