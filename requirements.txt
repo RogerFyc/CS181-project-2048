@@ -1,0 +1,16 @@
+# Python依赖库
+# 用于 CS181-project-2048 项目
+
+# 核心依赖
+numpy>=1.19.0
+
+# 深度学习（用于DQN Agent）
+# 注意：PyTorch安装取决于你的系统和是否需要GPU支持
+# CPU版本（推荐用于快速开始）:
+torch>=1.9.0
+
+# GPU版本（如果需要GPU加速训练）:
+# 请访问 https://pytorch.org/get-started/locally/ 查看适合你系统的安装命令
+# 例如（CUDA 11.8）:
+# torch>=2.0.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
+

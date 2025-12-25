@@ -100,8 +100,9 @@ class MinimaxAgent:
         self.special_pos = special_pos
         self.max_min_branches = max_min_branches
 
-    def choose_move(self, mat):
-        """返回 'Up'/'Down'/'Left'/'Right' 或 None(无路可走)。"""
+    def choose_move(self, mat, prev_mat=None):
+        """返回 'Up'/'Down'/'Left'/'Right' 或 None(无路可走)。
+        Accepts optional `prev_mat` for API compatibility with other agents."""
         best_move = None
         best_score = -float("inf")
 

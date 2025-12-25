@@ -21,10 +21,10 @@ import random
 
 def main():
     parser = argparse.ArgumentParser(description='Train DQN Agent for 2048')
-    parser.add_argument('--episodes', type=int, default=10000,
+    parser.add_argument('--episodes', type=int, default=500,
                         help='Number of training episodes (default: 10000)')
-    parser.add_argument('--save-freq', type=int, default=1000,
-                        help='Save model every N episodes (default: 1000)')
+    parser.add_argument('--save-freq', type=int, default= 50 ,
+                        help='Save model every N episodes (default: 100)')
     parser.add_argument('--save-path', type=str, default='dqn_2048_model.pth',
                         help='Path to save model (default: dqn_2048_model.pth)')
     parser.add_argument('--load-path', type=str, default=None,
@@ -101,8 +101,6 @@ def main():
     print(f"  Batch size: {args.batch_size}")
     print(f"  Device: {agent.device}")
     print("\n" + "=" * 60)
-    print("💡 提示：按 Ctrl+C 可以安全终止训练并保存当前模型")
-    print("=" * 60 + "\n")
     
     try:
         episode_rewards, episode_lengths = train_dqn_agent(
@@ -115,43 +113,23 @@ def main():
         print("\n" + "=" * 60)
         print("Training completed successfully!")
         print(f"Final model saved to: {args.save_path}")
-        if episode_rewards:
-            print(f"Average reward (last 100 episodes): {sum(episode_rewards[-100:]) / min(100, len(episode_rewards)):.2f}")
-        if episode_lengths:
-            print(f"Average length (last 100 episodes): {sum(episode_lengths[-100:]) / min(100, len(episode_lengths)):.2f}")
+        print(f"Average reward (last 100 episodes): {sum(episode_rewards[-100:]) / min(100, len(episode_rewards)):.2f}")
+        print(f"Average length (last 100 episodes): {sum(episode_lengths[-100:]) / min(100, len(episode_lengths)):.2f}")
         print("=" * 60)
         
     except KeyboardInterrupt:
-        print("\n\n" + "=" * 60)
-        print("⚠️  Training interrupted by user (Ctrl+C)")
-        print("=" * 60)
-        print(f"\nSaving current model to {args.save_path}...")
-        try:
-            agent.save(args.save_path)
-            print("✅ Model saved successfully!")
-            if episode_rewards:
-                print(f"\nTraining progress:")
-                print(f"  Completed episodes: {len(episode_rewards)}/{args.episodes}")
-                print(f"  Average reward (last 100): {sum(episode_rewards[-100:]) / min(100, len(episode_rewards)):.2f}")
-                print(f"  Current epsilon: {agent.epsilon:.3f}")
-        except Exception as save_error:
-            print(f"❌ Failed to save model: {save_error}")
-        print("\nYou can resume training later using:")
-        print(f"  python train_dqn.py --load-path {args.save_path} --episodes {args.episodes - len(episode_rewards) if episode_rewards else args.episodes}")
-        print("=" * 60)
-        
+        print("\n\nTraining interrupted by user.")
+        print(f"Saving current model to {args.save_path}...")
+        agent.save(args.save_path)
+        print("Model saved.")
     except Exception as e:
-        print("\n\n" + "=" * 60)
-        print(f"❌ Training error: {e}")
-        print("=" * 60)
-        print(f"\nAttempting to save current model to {args.save_path}...")
+        print(f"\n\nTraining error: {e}")
+        print(f"Attempting to save current model to {args.save_path}...")
         try:
             agent.save(args.save_path)
-            print("✅ Model saved.")
-        except Exception as save_error:
-            print(f"❌ Failed to save model: {save_error}")
-        import traceback
-        traceback.print_exc()
+            print("Model saved.")
+        except:
+            print("Failed to save model.")
 
 
 if __name__ == "__main__":

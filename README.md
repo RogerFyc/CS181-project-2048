@@ -23,13 +23,31 @@ cd CS181-project-2048
 
 ### Requirements
 
-* Python 3.x
+* Python 3.7 or higher
 * Tkinter (usually bundled with Python on many platforms)
+* NumPy (for DQN agent)
+* PyTorch (optional, only required for DQN agent)
+
+### Installation
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+For detailed installation instructions, see [INSTALLATION.md](INSTALLATION.md).
 
 ### Run (GUI)
 
 ```bash
 python puzzle.py
+```
+
+### Train DQN Agent (Optional)
+
+```bash
+python train_dqn.py --episodes 500
 ```
 
 ## Project Structure (Typical)

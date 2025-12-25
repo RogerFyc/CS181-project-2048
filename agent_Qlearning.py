@@ -185,8 +185,11 @@ class DQNAgent:
         self.small_tile_threshold = 8   # 小数字阈值
         self.large_penalty = -100       # 大数字进入特殊格惩罚
         self.small_reward = 10          # 小数字进入特殊格奖励
-        self.terminal_penalty = -1000   # 游戏结束惩罚
-        self.merge_reward_scale = 10    # 合并奖励缩放
+        self.terminal_penalty = -500    # 游戏结束惩罚（减少以平衡奖励）
+        self.merge_reward_scale = 20    # 合并奖励缩放（增加）
+        self.step_reward = 1.0          # 每步基础奖励（鼓励持续游戏）
+        self.empty_reward_scale = 2.0   # 空格奖励缩放
+        self.max_tile_reward_scale = 5.0  # 最大块奖励缩放
     
     def detect_special_position(self, prev_mat, next_mat):
         """
@@ -302,15 +305,28 @@ class DQNAgent:
         """
         reward = 0.0
         
-        # 1. 合并奖励
+        # 0. 每步基础奖励（鼓励持续游戏）
+        reward += self.step_reward
+        
+        # 1. 合并奖励（基于合并产生的值）
         merge_score = self._calculate_merge_score(state, next_state_mat)
         reward += merge_score * self.merge_reward_scale
         
-        # 2. 特殊格惩罚/奖励
+        # 2. 空格奖励（保持空格很重要）
+        next_empty = sum(1 for i in range(4) for j in range(4) if next_state_mat[i][j] == 0)
+        reward += next_empty * self.empty_reward_scale
+        
+        # 3. 最大块奖励（鼓励创造更大的数字）
+        max_tile = max(max(row) for row in next_state_mat)
+        if max_tile > 0:
+            max_tile_log = _log2(max_tile)
+            reward += max_tile_log * self.max_tile_reward_scale
+        
+        # 4. 特殊格惩罚/奖励
         special_penalty = self._calculate_special_tile_penalty(state, next_state_mat)
         reward += special_penalty
         
-        # 3. 游戏结束惩罚
+        # 5. 游戏结束惩罚/奖励
         if done:
             if logic.game_state(next_state_mat) == 'lose':
                 reward += self.terminal_penalty
@@ -320,22 +336,44 @@ class DQNAgent:
         return reward
     
     def _calculate_merge_score(self, state_mat, next_state_mat):
-        """计算合并得分"""
-        # 计算合并前后的总和差异
-        state_sum = sum(sum(row) for row in state_mat)
-        next_sum = sum(sum(row) for row in next_state_mat)
-        
-        # 合并会增加总和（因为两个相同数字合并成一个翻倍的数字）
-        # 但实际上，合并后总和不变，我们需要通过其他方式检测
-        
-        # 更准确的方法：检测空格数量变化
+        """
+        计算合并得分（基于合并产生的值，而不仅仅是数量）
+        返回合并产生的总价值（log2编码）
+        """
+        # 检测空格数量变化（合并会产生空格）
         state_empty = sum(1 for i in range(4) for j in range(4) if state_mat[i][j] == 0)
         next_empty = sum(1 for i in range(4) for j in range(4) if next_state_mat[i][j] == 0)
         
         # 空格增加 = 合并发生
         merge_count = next_empty - state_empty
         
-        return merge_count
+        if merge_count <= 0:
+            return 0.0
+        
+        # 计算合并产生的总价值
+        # 方法：比较移动前后的总和，合并会增加总和（因为两个相同数字合并成一个翻倍的数字）
+        state_sum = sum(sum(row) for row in state_mat)
+        next_sum = sum(sum(row) for row in next_state_mat)
+        
+        # 合并产生的额外价值 = 新总和 - 旧总和
+        # 但还需要考虑新生成的tile（通常是2）
+        # 简化处理：如果空格增加，说明有合并，给予基于合并数量的奖励
+        # 更准确的方法：检测实际合并的值
+        merge_value = 0.0
+        
+        # 尝试检测合并的位置和值
+        # 由于合并逻辑复杂，我们使用简化方法：基于空格增加和总和变化
+        if merge_count > 0:
+            # 估算合并产生的价值（基于总和变化）
+            value_gain = next_sum - state_sum - 2  # 减去新生成的tile（通常是2）
+            if value_gain > 0:
+                # 合并产生的价值（log2编码）
+                merge_value = _log2(value_gain) if value_gain > 0 else 0
+            else:
+                # 如果无法准确计算，使用合并数量作为基础
+                merge_value = merge_count * 2  # 每个合并至少产生2的价值
+        
+        return merge_value
     
     def _calculate_special_tile_penalty(self, state_mat, next_state_mat):
         """计算特殊格惩罚/奖励"""
@@ -677,7 +715,6 @@ def train_dqn_agent(agent, num_episodes=10000, save_freq=1000, save_path="dqn_mo
         # 保存模型
         if (episode + 1) % save_freq == 0:
             agent.save(save_path)
-            print(f"  💾 Model saved at episode {episode + 1}")
     
     print("Training completed!")
     agent.save(save_path)
@@ -686,27 +723,9 @@ def train_dqn_agent(agent, num_episodes=10000, save_freq=1000, save_path="dqn_mo
 
 # 使用示例
 if __name__ == "__main__":
-    # 创建agent（两种方式）
-    
-    # 方式1：提供特殊格位置
-    # special_pos = (1, 1)  # 特殊格在中心
-    # agent = DQNAgent(
-    #     special_pos=special_pos,
-    #     auto_detect_special=False,  # 禁用自动检测
-    #     learning_rate=0.001,
-    #     gamma=0.99,
-    #     epsilon_start=1.0,
-    #     epsilon_end=0.01,
-    #     epsilon_decay=0.995,
-    #     memory_size=100000,
-    #     batch_size=64,
-    #     target_update_freq=1000
-    # )
-    
-    # 方式2：启用自动检测（推荐）
     agent = DQNAgent(
-        special_pos=None,  # 不提供特殊格位置
-        auto_detect_special=True,  # 启用自动检测
+        special_pos=None,  
+        auto_detect_special=True,  
         learning_rate=0.001,
         gamma=0.99,
         epsilon_start=1.0,

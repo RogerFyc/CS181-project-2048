@@ -349,7 +349,7 @@ class ExpectimaxAgent:
         
         return next_empty > original_empty
     
-    def choose_move(self, mat):
+    def choose_move(self, mat, prev_mat=None):
         """
         返回 'Up'/'Down'/'Left'/'Right' 或 None（无路可走）。
         优化：当棋盘填满时，优先考虑可以产生合并的方向。
