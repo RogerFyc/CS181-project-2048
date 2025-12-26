@@ -58,8 +58,8 @@ HEURISTIC_WEIGHTS = {
     'corner_other': 3,       # 其他角落权重（建议范围：2-5）
     'merge_potential': 5,   # 合并潜力权重（建议范围：10-20）
     'special_penalty': 100,    # 特殊格子惩罚系数（建议范围：3-8）
-    'special_penalty_scale': 2.0,  # 特殊格子惩罚缩放（大数字惩罚更重，建议范围：1.5-3.0）
-    'special_threshold': 32,  # 特殊格子严重惩罚阈值（>=此值惩罚更重，建议范围：16-64）
+    'special_penalty_scale': 3.0,  # 特殊格子惩罚缩放（大数字惩罚更重，增加到3.0以更严格）
+    'special_threshold': 64,  # 特殊格子严重惩罚阈值（>=此值惩罚更重，改为64以保护64+）
     'merge_special_reduction': 0.5,  # 特殊格子合并奖励减少比例（0.0-1.0，建议范围：0.2-0.5）
     'merge_special_threshold': 16,  # 特殊格子合并减少阈值（>=此值才减少，建议范围：8-32）
     'merge_special_penalty': 50,  # 特殊格子合并额外惩罚（建议范围：20-100）
@@ -69,6 +69,13 @@ HEURISTIC_WEIGHTS = {
     'max_tile_protection_threshold': 16,  # 最大块保护阈值（>=此值才保护，建议范围：8-32）
     'half_max_tile_special_penalty': 30000,  # 最大块/2在特殊格子的严重惩罚（建议范围：2000-6000）
     'half_max_tile_protection_threshold': 8,  # 最大块/2保护阈值（>=此值才保护，建议范围：4-16）
+    # 关键数字固定保护（获胜条件是512，需要保护关键合成路径上的数字）
+    'tile_64_penalty': 100000,    # 64在特殊格子的严重惩罚（大幅增加，64是合成128的关键）
+    'tile_128_penalty': 300000,   # 128在特殊格子的极严重惩罚（增加，128是合成256的关键，256是合成512的关键）
+    'tile_256_penalty': 600000,   # 256在特殊格子的最严重惩罚（增加，256是合成512的关键）
+    # 通用64+保护（所有64及以上的数字都应该受到严重惩罚）
+    'min_protected_tile': 64,     # 最小保护值（>=此值的所有数字都受到额外保护）
+    'general_64plus_penalty': 80000,  # 64及以上数字的通用惩罚（确保64+都不会进入特殊格）
 }
 
 # 危险位置评估参数
@@ -211,6 +218,8 @@ def _heuristic(mat, special_pos=None):
     special_penalty = 0
     max_tile_special_penalty = 0  # 最大块在特殊格子的额外严重惩罚
     half_max_tile_special_penalty = 0  # 最大块/2在特殊格子的额外严重惩罚
+    critical_tile_penalty = 0  # 关键数字（64, 128, 256）的固定值保护惩罚
+    general_64plus_penalty = 0  # 通用64+保护惩罚（所有64及以上的数字）
     
     if special_pos is not None:
         i, j = special_pos
@@ -226,6 +235,20 @@ def _heuristic(mat, special_pos=None):
                 special_penalty = -base_penalty * penalty_multiplier
             else:
                 special_penalty = -base_penalty
+            
+            # 7.0 通用64+保护：所有64及以上的数字都受到严重惩罚（优先检查）
+            if special_tile_value >= HEURISTIC_WEIGHTS['min_protected_tile']:
+                general_64plus_penalty = -HEURISTIC_WEIGHTS['general_64plus_penalty']
+            
+            # 7.0.1 关键数字固定值保护（获胜条件是512，需要保护关键合成路径上的数字）
+            # 64是合成128的关键，128是合成256的关键，256是合成512的关键
+            # 这些惩罚会在通用64+惩罚的基础上额外叠加
+            if special_tile_value == 64:
+                critical_tile_penalty = -HEURISTIC_WEIGHTS['tile_64_penalty']
+            elif special_tile_value == 128:
+                critical_tile_penalty = -HEURISTIC_WEIGHTS['tile_128_penalty']
+            elif special_tile_value == 256:
+                critical_tile_penalty = -HEURISTIC_WEIGHTS['tile_256_penalty']
             
             # 7.1 最大块保护：如果最大块在特殊格子上，给予非常严重的惩罚
             # 动态检查：如果特殊格子上的值等于当前场上最大tile
@@ -254,6 +277,8 @@ def _heuristic(mat, special_pos=None):
         + special_penalty
         + max_tile_special_penalty  # 最大块保护惩罚
         + half_max_tile_special_penalty  # 最大块/2保护惩罚
+        + general_64plus_penalty  # 通用64+保护惩罚（所有64及以上的数字）
+        + critical_tile_penalty  # 关键数字固定值保护惩罚（64, 128, 256，在通用惩罚基础上额外叠加）
     )
 
 
@@ -363,44 +388,94 @@ class ExpectimaxAgent:
         if not available_moves:
             return None
         
-        # 如果棋盘填满，优先考虑可以产生合并的方向
+        # 如果棋盘填满，对所有可移动方向进行评估，优先选择可以产生合并的方向
         if is_full:
-            # 筛选出可以产生合并的方向
+            moves_with_scores = []
             moves_with_merges = []
-            for move_name, move_fn, next_mat, done in available_moves:
-                if self._has_merge_potential(mat, move_fn):
-                    merge_count = self._count_merges_in_move(mat, move_fn)
-                    moves_with_merges.append((merge_count, move_name, next_mat))
             
+            # 对所有可移动方向进行评估
+            for move_name, move_fn, next_mat, done in available_moves:
+                try:
+                    # 使用chance_node评估该移动后的状态（期望得分）
+                    score = self._chance_node(next_mat, self.depth - 1)
+                    moves_with_scores.append((move_name, move_fn, score))
+                    
+                    # 检查该移动是否可以产生合并
+                    if self._has_merge_potential(mat, move_fn):
+                        moves_with_merges.append((move_name, move_fn, score))
+                except Exception as e:
+                    # 如果某个移动评估出错，记录但继续评估其他移动
+                    print(f"Warning: Error evaluating move {move_name} when board is full: {e}")
+                    continue
+            
+            # 如果有可以合并的方向，优先从可以合并的方向中选择得分最高的
             if moves_with_merges:
-                # 按合并数量排序（合并数量多的优先）
-                moves_with_merges.sort(reverse=True, key=lambda x: x[0])
-                
-                # 在可以合并的方向中选择最优的
                 best_move = None
                 best_score = -float("inf")
-                
-                for merge_count, move_name, next_mat in moves_with_merges:
-                    score = self._chance_node(next_mat, self.depth - 1)
+                for move_name, move_fn, score in moves_with_merges:
                     if score > best_score:
                         best_score = score
                         best_move = move_name
-                
                 if best_move is not None:
                     return best_move
-            # 如果没有可以合并的方向，继续正常流程（虽然理论上不应该发生）
+            
+            # 如果没有可以合并的方向，选择得分最高的方向
+            best_move = None
+            best_score = -float("inf")
+            for move_name, move_fn, score in moves_with_scores:
+                if score > best_score:
+                    best_score = score
+                    best_move = move_name
+            
+            # 如果所有评估都失败，返回第一个可用移动（回退策略）
+            if best_move is not None:
+                return best_move
+            else:
+                return available_moves[0][0]
         
         # 正常情况：在所有可用方向中选择最优的
-        best_move = None
-        best_score = -float("inf")
+        # 优先选择可以产生合并的方向
+        moves_with_scores = []
+        moves_with_merges = []
         
         for move_name, move_fn, next_mat, done in available_moves:
-            score = self._chance_node(next_mat, self.depth - 1)
+            try:
+                # 评估该移动的得分
+                score = self._chance_node(next_mat, self.depth - 1)
+                moves_with_scores.append((move_name, move_fn, score))
+                
+                # 检查该移动是否可以产生合并
+                if self._has_merge_potential(mat, move_fn):
+                    moves_with_merges.append((move_name, move_fn, score))
+            except Exception as e:
+                # 如果某个移动评估出错，记录但继续评估其他移动
+                print(f"Warning: Error evaluating move {move_name}: {e}")
+                continue
+        
+        # 如果有可以合并的方向，优先从可以合并的方向中选择得分最高的
+        if moves_with_merges:
+            best_move = None
+            best_score = -float("inf")
+            for move_name, move_fn, score in moves_with_merges:
+                if score > best_score:
+                    best_score = score
+                    best_move = move_name
+            if best_move is not None:
+                return best_move
+        
+        # 如果没有可以合并的方向（或所有方向都不能合并），选择得分最高的方向
+        best_move = None
+        best_score = -float("inf")
+        for move_name, move_fn, score in moves_with_scores:
             if score > best_score:
                 best_score = score
                 best_move = move_name
         
-        return best_move
+        # 如果所有评估都失败，返回第一个可用移动（回退策略）
+        if best_move is not None:
+            return best_move
+        else:
+            return available_moves[0][0]
 
     def _max_node(self, mat, depth):
         """Max层：玩家选方向。"""
