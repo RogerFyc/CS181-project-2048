@@ -14,6 +14,8 @@ try:
     DQN_AVAILABLE = True
 except ImportError:
     DQN_AVAILABLE = False
+from generate_dataset_from_human import DataCollector
+
 
 
 def _clone(mat):
@@ -73,6 +75,14 @@ class GameGrid(Frame):
             c.KEY_LEFT_ALT2: logic.left,
             c.KEY_RIGHT_ALT2: logic.right,
         }
+
+        #===== Data Collection =====
+        self.data_collector = DataCollector(
+        output_dir='collected_data',
+        output_format='json'  # 推荐用 json 便于后续处理
+         )
+        self.collecting_enabled = False  # 默认关闭，按 'C' 启用
+
 
         # ===== UI =====
         self._init_topbar()
@@ -376,6 +386,16 @@ class GameGrid(Frame):
         if self.end_popup is not None:
             return
 
+        # 记录游戏结束
+        if self.collecting_enabled:
+            game_score = sum(sum(row) for row in self.matrix)
+            self.data_collector.stop_recording(
+                game_score=game_score,
+                game_steps=self.step_count,
+                game_state=result  # "win" 或 "lose"
+            )
+
+
         self._stop_ai_loop()
         mode = self.controller_var.get()
         ai_type = self.ai_type_var.get()
@@ -428,6 +448,14 @@ class GameGrid(Frame):
     # ---------------- restart ----------------
 
     def restart(self):
+        #先丢弃上一局（如果还有未完成的数据）
+        if self.collecting_enabled and self.data_collector.is_recording:
+            print(f"⚠️  放弃第 {self.data_collector.current_global_episode_id} 局（未完成）")
+            self.data_collector.discard_current_episode()  # ← 只是丢弃，不保存！
+        # 开始新的采集 episode
+        if self.collecting_enabled:
+            self.data_collector.start_recording()
+
         self._stop_ai_loop()
         self._close_end_popup()
 
@@ -475,6 +503,10 @@ class GameGrid(Frame):
         if self.end_popup is not None:
             return False
 
+        #在移动前保存状态
+        state_before_move = _clone(self.matrix) if self.collecting_enabled else None
+        
+
         new_mat, done = move_fn(_clone(self.matrix))
         if not done:
             return False
@@ -484,6 +516,19 @@ class GameGrid(Frame):
         self.step_count += 1
 
         self._post_move_updates()
+
+
+        #在游戏更新后记录数据
+        if self.collecting_enabled:
+            old_score = sum(sum(row) for row in state_before_move) if state_before_move else 0
+            new_score = sum(sum(row) for row in self.matrix)
+            self.data_collector.record_step(state_before_move, 
+                move_name,
+                _clone(self.matrix),
+                float(new_score - old_score),
+                False,
+                special_pos=self.special_cell_pos)
+        
         self._update_status()
         return True
 
@@ -581,6 +626,25 @@ class GameGrid(Frame):
         if key == self.KEY_RESTART:
             self.restart()
             return
+
+        # 按 'C' 切换数据采集
+        if key == 'c':
+            self.collecting_enabled = not self.collecting_enabled
+            status = "✅ 启用" if self.collecting_enabled else "❌ 禁用"
+            print(f"\n📊 数据采集已{status}")
+            print(f"   已采集数据：{self.data_collector.total_steps} 步，{self.data_collector.total_games} 局")
+            return
+    
+        # 按 'V' 保存当前采集的数据
+        if key == 'v':
+            if self.data_collector.total_steps == 0:
+                print("⚠️ 还没有采集任何数据")
+                return
+            self.data_collector.save_to_file()
+            print(f"✅ 数据已保存到 collected_data/ 目录")
+            return
+
+
 
         # toggle controller (Human <-> AI)
         if key == self.KEY_TOGGLE_CONTROLLER:

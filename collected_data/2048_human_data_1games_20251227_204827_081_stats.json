@@ -1,0 +1,13 @@
+{
+  "total_games": 1,
+  "total_steps": 362,
+  "timestamp": "2025-12-27T20:48:27.096401",
+  "games": [
+    {
+      "game_id": 1,
+      "num_steps": 355,
+      "score": 386,
+      "state": "lose"
+    }
+  ]
+}
