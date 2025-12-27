@@ -21,32 +21,62 @@ import random
 
 def main():
     parser = argparse.ArgumentParser(description='Train DQN Agent for 2048')
-    parser.add_argument('--episodes', type=int, default=1000,
-                        help='Number of training episodes (default: 10000)')
-    parser.add_argument('--save-freq', type=int, default= 100 ,
+    
+    # ========== 可修改的训练参数 ==========
+    # 训练轮数：建议 5000-50000，根据需求调整
+    parser.add_argument('--episodes', type=int, default=2000,
+                        help='Number of training episodes (default: 5000)')
+    
+    # 模型保存频率：每N个episode保存一次，建议 100-2000
+    parser.add_argument('--save-freq', type=int, default=100,
                         help='Save model every N episodes (default: 100)')
+    
+    # 模型保存路径：可以修改为其他文件名
     parser.add_argument('--save-path', type=str, default='dqn_2048_model.pth',
                         help='Path to save model (default: dqn_2048_model.pth)')
+    
+    # 加载已有模型：如果要从已有模型继续训练，设置此参数
     parser.add_argument('--load-path', type=str, default=None,
                         help='Path to load existing model (optional)')
+    
+    # 特殊格位置：如果知道位置可以手动设置，格式: --special-pos 1 1
     parser.add_argument('--special-pos', type=int, nargs=2, default=None,
                         help='Special tile position (i, j). If not provided, auto-detect will be enabled.')
-    parser.add_argument('--learning-rate', type=float, default=0.001,
-                        help='Learning rate (default: 0.001)')
+    
+    # ========== 可修改的神经网络参数 ==========
+    # 学习率：建议 0.0001-0.01，如果训练不稳定可以降低到 0.0005
+    parser.add_argument('--learning-rate', type=float, default=0.0005,
+                        help='Learning rate (default: 0.001, recommended: 0.0005-0.001)')
+    
+    # 折扣因子：通常保持 0.95-0.99，不建议修改
     parser.add_argument('--gamma', type=float, default=0.99,
-                        help='Discount factor (default: 0.99)')
+                        help='Discount factor (default: 0.99, usually keep unchanged)')
+    
+    # ========== 可修改的探索参数 ==========
+    # 初始探索率：通常保持 1.0
     parser.add_argument('--epsilon-start', type=float, default=1.0,
-                        help='Initial epsilon (default: 1.0)')
-    parser.add_argument('--epsilon-end', type=float, default=0.01,
-                        help='Final epsilon (default: 0.01)')
-    parser.add_argument('--epsilon-decay', type=float, default=0.995,
-                        help='Epsilon decay rate (default: 0.995)')
+                        help='Initial epsilon (default: 1.0, usually keep unchanged)')
+    
+    # 最终探索率：建议 0.01-0.1，如果reward下降可以提高到 0.05
+    parser.add_argument('--epsilon-end', type=float, default=0.05,
+                        help='Final epsilon (default: 0.05, recommended: 0.01-0.1)')
+    
+    # 探索率衰减：建议 0.998-0.999，如果reward下降可以改为 0.998
+    parser.add_argument('--epsilon-decay', type=float, default=0.998,
+                        help='Epsilon decay rate (default: 0.995, recommended: 0.998-0.999)')
+    
+    # ========== 可修改的经验回放参数 ==========
+    # 批次大小：建议 32-128，如果内存充足可以增加到 128
     parser.add_argument('--batch-size', type=int, default=64,
-                        help='Batch size (default: 64)')
-    parser.add_argument('--memory-size', type=int, default=100000,
-                        help='Replay buffer size (default: 100000)')
-    parser.add_argument('--target-update-freq', type=int, default=1000,
-                        help='Target network update frequency (default: 1000)')
+                        help='Batch size (default: 64, recommended: 32-128)')
+    
+    # 经验回放缓冲区大小：建议 50000-200000
+    parser.add_argument('--memory-size', type=int, default=10000,
+                        help='Replay buffer size (default: 100000, recommended: 50000-200000)')
+    
+    # 目标网络更新频率：建议 500-2000，如果训练不稳定可以降低到 500
+    parser.add_argument('--target-update-freq', type=int, default=500,
+                        help='Target network update frequency (default: 1000, recommended: 500-2000)')
     
     args = parser.parse_args()
     

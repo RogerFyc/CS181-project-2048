@@ -80,7 +80,7 @@ class QNetwork(nn.Module):
 
 
 class ReplayBuffer:
-    """
+    """ 
     经验回放缓冲区
     """
     def __init__(self, capacity=100000):
@@ -113,9 +113,9 @@ class DQNAgent:
     
     def __init__(self, 
                  special_pos=None,
-                 state_size=18,
-                 action_size=4,
-                 hidden_size=256,
+                 state_size=18,  # 可修改：状态向量维度（通常不需要修改）
+                 action_size=4,  # 可修改：动作数量（4个方向，通常不需要修改）
+                 hidden_size=256,  # 可修改：隐藏层大小，建议 128-512，值越大网络容量越大但训练更慢
                  learning_rate=0.001,
                  gamma=0.99,
                  epsilon_start=1.0,
@@ -177,20 +177,45 @@ class DQNAgent:
         # 优化器
         self.optimizer = optim.Adam(self.q_network.parameters(), lr=learning_rate)
         
+        # 学习率调度器（可选，用于在训练后期降低学习率）
+        self.learning_rate = learning_rate
+        self.scheduler = None  # 可以在训练过程中添加学习率调度器
+        
         # 经验回放缓冲区
         self.memory = ReplayBuffer(memory_size)
         
-        # 奖励函数参数
-        self.large_tile_threshold = 32  # 大数字阈值（用于分级惩罚）
-        self.tile_2_reward = 20         # 数字2进入特殊格奖励（鼓励2进入）
-        self.base_penalty = -200       # 基础惩罚（>2的数字进入特殊格）
-        self.terminal_penalty = -3000   # 游戏结束惩罚（大幅增加，避免过早失败）
-        self.merge_reward_scale = 20    # 合并奖励缩放（增加）
-        self.step_reward = 1.0          # 每步基础奖励（鼓励持续游戏）
-        self.empty_reward_scale = 2.0   # 空格奖励缩放
-        self.max_tile_reward_scale = 5.0  # 最大块奖励缩放
-        # 分级惩罚参数（根据数字大小设置不同惩罚）
-        self.penalty_scale_factor = 100  # 惩罚缩放因子（数字越大惩罚越重，增加以更严厉）
+        # ========== 可修改的奖励函数参数 ==========
+        # 注意：修改这些参数会影响agent的学习行为，建议根据训练效果调整
+        
+        # 大数字阈值（用于分级惩罚）
+        self.large_tile_threshold = 32  # 可修改：建议 16-64
+        
+        # 数字2进入特殊格奖励（鼓励2进入特殊格）
+        self.tile_2_reward = 20  # 可修改：建议 10-50，值越大越鼓励2进入特殊格
+        
+        # 基础惩罚（>2的数字进入特殊格的基础惩罚）
+        self.base_penalty = -200  # 可修改：建议 -100 到 -500，值越小（越负）惩罚越重
+        
+        # 游戏结束惩罚（游戏失败时的惩罚）
+        self.terminal_penalty = -3000  # 可修改：建议 -1000 到 -5000，值越小（越负）惩罚越重
+        
+        # 合并奖励缩放（合并tile时的奖励倍数）
+        self.merge_reward_scale = 20  # 可修改：建议 10-50，值越大越鼓励合并
+        
+        # 每步基础奖励（鼓励持续游戏，避免过早结束）
+        self.step_reward = 1.0  # 可修改：建议 0.5-2.0，值越大越鼓励持续游戏
+        
+        # 空格奖励缩放（保持空格数量的奖励倍数）
+        self.empty_reward_scale = 2.0  # 可修改：建议 1.0-5.0，值越大越鼓励保持空格
+        
+        # 最大块奖励缩放（创造更大数字的奖励倍数）
+        self.max_tile_reward_scale = 5.0  # 可修改：建议 2.0-10.0，值越大越鼓励创造大数字
+        
+        # 惩罚缩放因子（根据数字大小设置不同惩罚，数字越大惩罚越重）
+        self.penalty_scale_factor = 100  # 可修改：建议 50-200，值越大对大数据惩罚越重
+        
+        # 无效合并惩罚（外部2和特殊格中的2在特殊格合并成4，但除以2变成2的情况）
+        self.ineffective_merge_penalty = -150  # 可修改：建议 -100 到 -300，惩罚无效合并
     
     def detect_special_position(self, prev_mat, next_mat):
         """
@@ -381,6 +406,7 @@ class DQNAgent:
         计算特殊格惩罚/奖励
         策略：只有数字2可以进入特殊格（给予奖励），其他所有数字（>2）进入都受到惩罚
         根据进入特殊格的数字大小设置分级惩罚（数字越大惩罚越重）
+        同时检测无效合并：外部2和特殊格中的2在特殊格合并成4，但除以2变成2的情况
         """
         special_pos = self.get_special_position()
         if special_pos is None:
@@ -393,6 +419,51 @@ class DQNAgent:
         state_value = state_mat[i][j]
         next_value = next_state_mat[i][j]
         
+        # ========== 检测无效合并：外部2和特殊格中的2在特殊格合并成4，但除以2变成2 ==========
+        # 这种情况的特征：
+        # 1. 移动前特殊格是2
+        # 2. 移动后特殊格仍然是2（因为4被特殊格效果减半成2）
+        # 3. 发生了合并（两个2合并成4，然后4被特殊格效果减半成2）
+        # 4. 这实际上是一个无效的合并，因为最终结果还是2，没有实际收益
+        
+        if state_value == 2 and next_value == 2:
+            # 检查是否发生了合并
+            # 方法：检查空格数量变化（合并会产生空格）
+            state_empty = sum(1 for row in state_mat for cell in row if cell == 0)
+            next_empty = sum(1 for row in next_state_mat for cell in row if cell == 0)
+            
+            # 如果空格增加，说明发生了合并
+            # 如果特殊格前后都是2，但空格增加了，很可能是无效合并
+            if next_empty > state_empty:
+                # 检查是否有2被推入特殊格并发生无效合并
+                # 方法：统计移动前后2的数量变化
+                # 无效合并的特征：
+                # - 两个2合并成4，然后4被特殊格效果减半成2
+                # - 所以2的总数应该减少1（两个2变成一个2）
+                # - 但新生成的tile通常是2，所以2的总数可能不变
+                # - 更准确的检测：检查特殊格所在的行和列是否有2消失
+                
+                # 检查特殊格所在的行和列，看是否有2消失（被推入特殊格）
+                has_2_merged_in_special = False
+                
+                # 检查特殊格所在的行
+                row_2_before = sum(1 for col in range(4) if state_mat[i][col] == 2)
+                row_2_after = sum(1 for col in range(4) if next_state_mat[i][col] == 2)
+                if row_2_before > row_2_after:
+                    has_2_merged_in_special = True
+                
+                # 检查特殊格所在的列
+                if not has_2_merged_in_special:
+                    col_2_before = sum(1 for row in range(4) if state_mat[row][j] == 2)
+                    col_2_after = sum(1 for row in range(4) if next_state_mat[row][j] == 2)
+                    if col_2_before > col_2_after:
+                        has_2_merged_in_special = True
+                
+                # 如果检测到无效合并，给予惩罚
+                if has_2_merged_in_special:
+                    penalty += self.ineffective_merge_penalty
+        
+        # ========== 原有逻辑：检查是否有tile进入了特殊格 ==========
         # 如果特殊格上的值增加了，说明有tile进入了
         if next_value > state_value:
             # 只有数字2可以进入特殊格，给予奖励
@@ -496,15 +567,34 @@ class DQNAgent:
         self.optimizer.step()
         
         # 更新目标网络
+        # 使用软更新（可选，更稳定）或硬更新（当前方式）
         self.update_counter += 1
         if self.update_counter % self.target_update_freq == 0:
+            # 硬更新：直接复制权重
             self.target_network.load_state_dict(self.q_network.state_dict())
+            # 可选：软更新（更稳定，但需要额外的tau参数）
+            # tau = 0.01  # 软更新系数
+            # for target_param, local_param in zip(self.target_network.parameters(), self.q_network.parameters()):
+            #     target_param.data.copy_(tau * local_param.data + (1.0 - tau) * target_param.data)
         
-        # 衰减探索率
-        if self.epsilon > self.epsilon_end:
-            self.epsilon *= self.epsilon_decay
+        # 注意：epsilon衰减应该在每个episode结束时进行，而不是每次replay时
+        # 这样可以避免epsilon衰减过快
         
         return loss.item()
+    
+    def decay_epsilon(self, episode=None, total_episodes=None):
+        """
+        在每个episode结束时衰减探索率
+        
+        Args:
+            episode: 当前episode编号（可选，用于线性衰减）
+            total_episodes: 总episode数（可选，用于线性衰减）
+        """
+        if self.epsilon > self.epsilon_end:
+            # 使用指数衰减（默认）
+            self.epsilon *= self.epsilon_decay
+            # 确保epsilon不会低于最小值
+            self.epsilon = max(self.epsilon, self.epsilon_end)
     
     def _is_board_full(self, mat):
         """检查棋盘是否已填满（没有空格）。"""
@@ -530,6 +620,127 @@ class DQNAgent:
         next_empty = sum(1 for i in range(n) for j in range(n) if next_mat[i][j] == 0)
         
         return next_empty > original_empty
+    
+    def _would_cause_dead_loop(self, mat, move_name):
+        """
+        检测某个移动是否会导致死循环。
+        死循环情况：只有1-2个空格子，在特殊格附近，特殊格中是2，
+        如果向特殊格方向移动，会将新合成的4推入特殊格变成2，形成死循环。
+        
+        Args:
+            mat: 当前游戏矩阵
+            move_name: 移动方向名称
+            
+        Returns:
+            bool: 如果会导致死循环返回True，否则返回False
+        """
+        special_pos = self.get_special_position()
+        if special_pos is None:
+            return False
+        
+        # 检查空格子数量（1-2个）
+        empty_cells = []
+        for i in range(4):
+            for j in range(4):
+                if mat[i][j] == 0:
+                    empty_cells.append((i, j))
+        
+        if len(empty_cells) < 1 or len(empty_cells) > 2:
+            return False
+        
+        special_i, special_j = special_pos
+        
+        # 检查特殊格中是否是2
+        if mat[special_i][special_j] != 2:
+            return False
+        
+        # 检查空格子是否在特殊格附近（上下左右，或对角线相邻）
+        # 对于2个空格子的情况，至少有一个应该在特殊格旁边
+        has_adjacent_empty = False
+        for empty_pos in empty_cells:
+            is_adjacent = (abs(empty_pos[0] - special_i) == 1 and empty_pos[1] == special_j) or \
+                          (abs(empty_pos[1] - special_j) == 1 and empty_pos[0] == special_i)
+            if is_adjacent:
+                has_adjacent_empty = True
+                break
+        
+        if not has_adjacent_empty:
+            return False
+        
+        # 检查移动方向是否会向特殊格方向移动
+        # 获取移动函数
+        move_fn = MOVE_FUNCS.get(move_name)
+        if move_fn is None:
+            return False
+        
+        # 模拟移动
+        next_mat, done = move_fn(_clone(mat))
+        if not done:
+            return False
+        
+        # 应用特殊格效果
+        next_mat = _apply_special_cell_effect(next_mat, special_pos)
+        
+        # 检查移动后特殊格的值
+        next_special_val = next_mat[special_i][special_j]
+        next_empty_cells = [(i, j) for i in range(4) for j in range(4) if next_mat[i][j] == 0]
+        
+        # 检查移动后是否会产生死循环状态
+        # 死循环的特征：
+        # 1. 移动后特殊格变成2（说明有4被推入并减半）
+        # 2. 移动后空格子还在（说明没有完全填满）
+        # 3. 关键：检查移动前在移动方向上是否有可以合并成4的情况
+        
+        special_val_before = mat[special_i][special_j]
+        
+        # 如果移动后特殊格变成2，且空格子还在，需要进一步检查
+        # 这可能是死循环的征兆：4被推入特殊格并减半成2，空格子继续变成2
+        if next_special_val == 2 and len(next_empty_cells) >= 1:
+            # 检查移动方向上是否有两个2可以合并成4
+            # 这会合并成4，然后4被推入特殊格变成2
+            has_mergeable_2s = False
+            
+            if move_name == "Down":
+                # 检查特殊格所在的列中是否有两个2可以合并
+                col = special_j
+                for row in range(3):
+                    if mat[row][col] == 2 and mat[row+1][col] == 2:
+                        has_mergeable_2s = True
+                        break
+            elif move_name == "Up":
+                # 检查特殊格所在的列中是否有两个2可以合并
+                col = special_j
+                for row in range(1, 4):
+                    if mat[row][col] == 2 and mat[row-1][col] == 2:
+                        has_mergeable_2s = True
+                        break
+            elif move_name == "Right":
+                # 检查特殊格所在的行中是否有两个2可以合并
+                row = special_i
+                for col in range(3):
+                    if mat[row][col] == 2 and mat[row][col+1] == 2:
+                        has_mergeable_2s = True
+                        break
+            elif move_name == "Left":
+                # 检查特殊格所在的行中是否有两个2可以合并
+                row = special_i
+                for col in range(1, 4):
+                    if mat[row][col] == 2 and mat[row][col-1] == 2:
+                        has_mergeable_2s = True
+                        break
+            
+            # 如果移动方向上有可合并的2，且移动后特殊格变成2，可能形成死循环
+            # 因为两个2会合并成4，然后4被推入特殊格并减半成2
+            if has_mergeable_2s:
+                return True
+            # 如果特殊格之前不是2，但移动后变成2，说明有4（或更大的数字）被推入并减半
+            # 这种情况下，如果空格子还在，也可能形成死循环
+            # 但为了更准确，我们只在特殊格之前是2的情况下才认为可能是死循环
+            # 或者特殊格之前是4，移动后变成2（说明4被推入并减半）
+            elif special_val_before == 2 or special_val_before == 4:
+                return True
+        
+        return False
     
     def choose_move(self, mat, prev_mat=None):
         """
@@ -557,6 +768,24 @@ class DQNAgent:
         
         if not available_moves:
             return None
+        
+        # 检测并排除会导致死循环的移动
+        safe_moves = []
+        dead_loop_moves = []
+        for move_name, move_fn in available_moves:
+            if self._would_cause_dead_loop(mat, move_name):
+                dead_loop_moves.append((move_name, move_fn))
+            else:
+                safe_moves.append((move_name, move_fn))
+        
+        # 如果有安全的移动，优先使用安全的移动
+        if safe_moves:
+            available_moves = safe_moves
+        # 如果没有安全的移动（理论上不应该发生），使用所有可用移动
+        # 但记录警告
+        elif dead_loop_moves:
+            print("Warning: All available moves would cause dead loop, using them anyway")
+            available_moves = dead_loop_moves
         
         # 检查棋盘是否填满
         is_full = self._is_board_full(mat)
@@ -729,6 +958,9 @@ def train_dqn_agent(agent, num_episodes=10000, save_freq=1000, save_path="dqn_mo
         
         episode_rewards.append(total_reward)
         episode_lengths.append(steps)
+        
+        # 在每个episode结束时衰减epsilon（而不是每次replay时）
+        agent.decay_epsilon()
         
         # 打印进度
         if (episode + 1) % 100 == 0:
