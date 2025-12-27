@@ -27,6 +27,10 @@ class DataCollector:
         self.global_episode_id = self._load_global_episode_id()  # ← 唯一的 ID 来源
         
         self.is_recording = False
+
+        # ===== 新增：累计削减次数 =====
+        self.times_max_reduced = 0      # 最大 tile 被削减的累计次数
+        self.times_other_reduced = 0    # 其他 tile 被削减的累计次数
         
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
@@ -57,29 +61,56 @@ class DataCollector:
         if self.current_episode_data:
             self.current_episode_data = []
         
+
+        # ===== 新增：开始新局，重置累计计数 =====
+        self.times_max_reduced = 0
+        self.times_other_reduced = 0
+
         self.is_recording = True
         self.episode_count += 1
         # ✅ 使用全局编号
         self.current_global_episode_id = self.global_episode_id + self.episode_count - 1
         print(f"▶️  开始记录第 {self.current_global_episode_id} 局（本次运行第 {self.episode_count} 局）")
     
-    def record_step(self, state_matrix, action, next_state_matrix, reward, done, special_pos):
+    def record_step(self, state_matrix, action, next_state_matrix, special_pos):
         """记录一步"""
         if not self.is_recording:
             return
         
         state = flatten_matrix(state_matrix)
         next_state = flatten_matrix(next_state_matrix)
+
+        # 1. 计算剩余空格数
+        empty_cells = sum(1 for i in range(len(next_state_matrix)) for j in range(len(next_state_matrix[0])) if next_state_matrix[i][j] == 0)
+
+        # 2. 计算最大 tile 和其他 tile 的削减次数
+        max_tile_before = max(max(row) for row in state_matrix)
+        max_tile_after = max(max(row) for row in next_state_matrix)
         
+        if special_pos is not None:
+            i, j = special_pos
+            state_val = state_matrix[i][j]
+            next_val = next_state_matrix[i][j]
+        
+            # 判断是否被减半（next_val == state_val // 2 且 state_val > 2）
+            if state_val > 2 and next_val == state_val // 2:
+                if state_val == max_tile_before:
+                    self.times_max_reduced += 1
+                else:
+                    self.times_other_reduced += 1
+        # ===== 结束新增 =====
+
         data_point = {
-            'episode': self.current_global_episode_id,  # ✅ 使用全局编号
+            'episode': self.current_global_episode_id,  #  使用全局编号
             'step': len(self.current_episode_data),
             'state': state,
             'action': action,
-            'reward': float(reward),
             'special_pos': special_pos,
             'next_state': next_state,
-            'done': bool(done)
+            'empty_cells': empty_cells,
+            'times_max_reduced': self.times_max_reduced,
+            'times_other_reduced': self.times_other_reduced,
+            'max_tile_val': max_tile_after, # 新增：当前（更新后）最大 tile 值
         }
         
         self.current_episode_data.append(data_point)
@@ -138,7 +169,9 @@ class DataCollector:
                         'game_id': ep['episode'],
                         'num_steps': ep['num_steps'],
                         'score': ep['game_score'],
-                        'state': ep['game_state']
+                        'state': ep['game_state'],
+                        'max_tile': max(step.get('max_tile_val', 0) for step in ep['data']) if ep['data'] else 0,                        'times_max_reduced': ep['data'][-1].get('times_max_reduced', 0) if ep['data'] else 0,
+                        'times_other_reduced': ep['data'][-1].get('times_other_reduced', 0) if ep['data'] else 0,
                     }
                     for ep in self.all_episodes_data
                 ]

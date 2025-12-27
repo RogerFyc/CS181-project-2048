@@ -1,0 +1,97 @@
+{
+  "total_games": 10,
+  "total_steps": 2639,
+  "timestamp": "2025-12-28T01:27:02.257902",
+  "games": [
+    {
+      "game_id": 1,
+      "num_steps": 490,
+      "score": 286,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 9,
+      "times_other_reduced": 25
+    },
+    {
+      "game_id": 2,
+      "num_steps": 215,
+      "score": 240,
+      "state": "lose",
+      "max_tile": 64,
+      "times_max_reduced": 0,
+      "times_other_reduced": 8
+    },
+    {
+      "game_id": 3,
+      "num_steps": 234,
+      "score": 198,
+      "state": "lose",
+      "max_tile": 64,
+      "times_max_reduced": 1,
+      "times_other_reduced": 18
+    },
+    {
+      "game_id": 4,
+      "num_steps": 551,
+      "score": 298,
+      "state": "lose",
+      "max_tile": 64,
+      "times_max_reduced": 2,
+      "times_other_reduced": 42
+    },
+    {
+      "game_id": 5,
+      "num_steps": 205,
+      "score": 296,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 5
+    },
+    {
+      "game_id": 6,
+      "num_steps": 251,
+      "score": 278,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 12
+    },
+    {
+      "game_id": 7,
+      "num_steps": 164,
+      "score": 234,
+      "state": "lose",
+      "max_tile": 128,
+      "times_max_reduced": 1,
+      "times_other_reduced": 3
+    },
+    {
+      "game_id": 8,
+      "num_steps": 190,
+      "score": 290,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 5
+    },
+    {
+      "game_id": 9,
+      "num_steps": 125,
+      "score": 120,
+      "state": "lose",
+      "max_tile": 32,
+      "times_max_reduced": 2,
+      "times_other_reduced": 8
+    },
+    {
+      "game_id": 10,
+      "num_steps": 214,
+      "score": 268,
+      "state": "lose",
+      "max_tile": 128,
+      "times_max_reduced": 0,
+      "times_other_reduced": 13
+    }
+  ]
+}

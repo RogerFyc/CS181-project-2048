@@ -492,12 +492,13 @@ class GameGrid(Frame):
         self.update_grid_cells()
 
         state = logic.game_state(self.matrix)
-        if state == "win":
-            if self.controller_var.get() == "AI":
-                print(f"[{self.ai_type_var.get()}] WIN in {self.step_count} steps.")
-            self._show_end_popup("win")
-        elif state == "lose":
-            self._show_end_popup("lose")
+        return state
+        #if state == "win":
+        #    if self.controller_var.get() == "AI":
+        #        print(f"[{self.ai_type_var.get()}] WIN in {self.step_count} steps.")
+        #    self._show_end_popup("win")
+        #elif state == "lose":
+        #    self._show_end_popup("lose")
 
     def _try_move_by_func(self, move_fn, move_name):
         if self.end_popup is not None:
@@ -515,20 +516,26 @@ class GameGrid(Frame):
         self.last_move = move_name
         self.step_count += 1
 
-        self._post_move_updates()
+        state = self._post_move_updates()
 
 
         #在游戏更新后记录数据
         if self.collecting_enabled:
-            old_score = sum(sum(row) for row in state_before_move) if state_before_move else 0
-            new_score = sum(sum(row) for row in self.matrix)
             self.data_collector.record_step(state_before_move, 
                 move_name,
                 _clone(self.matrix),
-                float(new_score - old_score),
-                False,
                 special_pos=self.special_cell_pos)
         
+
+    # 再根据状态弹窗与停止采集
+        if state == "win":
+            if self.controller_var.get() == "AI":
+                print(f"[{self.ai_type_var.get()}] WIN in {self.step_count} steps.")
+            self._show_end_popup("win")
+        elif state == "lose":
+            self._show_end_popup("lose")
+
+            
         self._update_status()
         return True
 
