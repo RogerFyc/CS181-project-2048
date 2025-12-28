@@ -1,7 +1,7 @@
 {
-  "total_games": 10,
-  "total_steps": 2639,
-  "timestamp": "2025-12-28T01:27:02.257902",
+  "total_games": 50,
+  "total_steps": 11530,
+  "timestamp": "2025-12-28T16:24:30.105974",
   "games": [
     {
       "game_id": 1,
@@ -14,6 +14,87 @@
     },
     {
       "game_id": 2,
+      "num_steps": 173,
+      "score": 296,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 4
+    },
+    {
+      "game_id": 3,
+      "num_steps": 154,
+      "score": 286,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 2
+    },
+    {
+      "game_id": 4,
+      "num_steps": 216,
+      "score": 292,
+      "state": "lose",
+      "max_tile": 128,
+      "times_max_reduced": 0,
+      "times_other_reduced": 2
+    },
+    {
+      "game_id": 5,
+      "num_steps": 188,
+      "score": 298,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 0
+    },
+    {
+      "game_id": 6,
+      "num_steps": 192,
+      "score": 302,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 3
+    },
+    {
+      "game_id": 7,
+      "num_steps": 243,
+      "score": 298,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 6
+    },
+    {
+      "game_id": 8,
+      "num_steps": 168,
+      "score": 298,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 3
+    },
+    {
+      "game_id": 9,
+      "num_steps": 219,
+      "score": 308,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 8
+    },
+    {
+      "game_id": 10,
+      "num_steps": 189,
+      "score": 306,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 2
+    },
+    {
+      "game_id": 11,
       "num_steps": 215,
       "score": 240,
       "state": "lose",
@@ -22,7 +103,97 @@
       "times_other_reduced": 8
     },
     {
-      "game_id": 3,
+      "game_id": 12,
+      "num_steps": 229,
+      "score": 328,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 5
+    },
+    {
+      "game_id": 13,
+      "num_steps": 331,
+      "score": 316,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 3,
+      "times_other_reduced": 12
+    },
+    {
+      "game_id": 14,
+      "num_steps": 156,
+      "score": 284,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 3
+    },
+    {
+      "game_id": 15,
+      "num_steps": 233,
+      "score": 388,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 2
+    },
+    {
+      "game_id": 16,
+      "num_steps": 162,
+      "score": 296,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 0
+    },
+    {
+      "game_id": 17,
+      "num_steps": 426,
+      "score": 324,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 1,
+      "times_other_reduced": 20
+    },
+    {
+      "game_id": 18,
+      "num_steps": 169,
+      "score": 300,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 4
+    },
+    {
+      "game_id": 19,
+      "num_steps": 172,
+      "score": 290,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 5
+    },
+    {
+      "game_id": 20,
+      "num_steps": 197,
+      "score": 324,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 4
+    },
+    {
+      "game_id": 21,
+      "num_steps": 229,
+      "score": 376,
+      "state": "lose",
+      "max_tile": 128,
+      "times_max_reduced": 0,
+      "times_other_reduced": 2
+    },
+    {
+      "game_id": 22,
       "num_steps": 234,
       "score": 198,
       "state": "lose",
@@ -31,7 +202,97 @@
       "times_other_reduced": 18
     },
     {
-      "game_id": 4,
+      "game_id": 23,
+      "num_steps": 179,
+      "score": 290,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 4
+    },
+    {
+      "game_id": 24,
+      "num_steps": 317,
+      "score": 328,
+      "state": "lose",
+      "max_tile": 128,
+      "times_max_reduced": 0,
+      "times_other_reduced": 23
+    },
+    {
+      "game_id": 25,
+      "num_steps": 161,
+      "score": 284,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 0
+    },
+    {
+      "game_id": 26,
+      "num_steps": 203,
+      "score": 306,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 3
+    },
+    {
+      "game_id": 27,
+      "num_steps": 193,
+      "score": 306,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 6
+    },
+    {
+      "game_id": 28,
+      "num_steps": 202,
+      "score": 338,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 3
+    },
+    {
+      "game_id": 29,
+      "num_steps": 291,
+      "score": 304,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 8
+    },
+    {
+      "game_id": 30,
+      "num_steps": 129,
+      "score": 224,
+      "state": "lose",
+      "max_tile": 64,
+      "times_max_reduced": 0,
+      "times_other_reduced": 2
+    },
+    {
+      "game_id": 31,
+      "num_steps": 183,
+      "score": 308,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 1
+    },
+    {
+      "game_id": 32,
+      "num_steps": 156,
+      "score": 288,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 0
+    },
+    {
+      "game_id": 33,
       "num_steps": 551,
       "score": 298,
       "state": "lose",
@@ -40,7 +301,97 @@
       "times_other_reduced": 42
     },
     {
-      "game_id": 5,
+      "game_id": 34,
+      "num_steps": 195,
+      "score": 322,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 3
+    },
+    {
+      "game_id": 35,
+      "num_steps": 170,
+      "score": 296,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 4
+    },
+    {
+      "game_id": 36,
+      "num_steps": 245,
+      "score": 304,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 1,
+      "times_other_reduced": 7
+    },
+    {
+      "game_id": 37,
+      "num_steps": 297,
+      "score": 350,
+      "state": "lose",
+      "max_tile": 128,
+      "times_max_reduced": 0,
+      "times_other_reduced": 14
+    },
+    {
+      "game_id": 38,
+      "num_steps": 240,
+      "score": 316,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 6
+    },
+    {
+      "game_id": 39,
+      "num_steps": 314,
+      "score": 318,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 17
+    },
+    {
+      "game_id": 40,
+      "num_steps": 331,
+      "score": 330,
+      "state": "lose",
+      "max_tile": 128,
+      "times_max_reduced": 0,
+      "times_other_reduced": 19
+    },
+    {
+      "game_id": 41,
+      "num_steps": 227,
+      "score": 344,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 3
+    },
+    {
+      "game_id": 42,
+      "num_steps": 214,
+      "score": 338,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 4
+    },
+    {
+      "game_id": 43,
+      "num_steps": 413,
+      "score": 242,
+      "state": "lose",
+      "max_tile": 128,
+      "times_max_reduced": 3,
+      "times_other_reduced": 22
+    },
+    {
+      "game_id": 44,
       "num_steps": 205,
       "score": 296,
       "state": "win",
@@ -49,7 +400,16 @@
       "times_other_reduced": 5
     },
     {
-      "game_id": 6,
+      "game_id": 45,
+      "num_steps": 185,
+      "score": 296,
+      "state": "win",
+      "max_tile": 256,
+      "times_max_reduced": 0,
+      "times_other_reduced": 1
+    },
+    {
+      "game_id": 46,
       "num_steps": 251,
       "score": 278,
       "state": "win",
@@ -58,7 +418,7 @@
       "times_other_reduced": 12
     },
     {
-      "game_id": 7,
+      "game_id": 47,
       "num_steps": 164,
       "score": 234,
       "state": "lose",
@@ -67,7 +427,7 @@
       "times_other_reduced": 3
     },
     {
-      "game_id": 8,
+      "game_id": 48,
       "num_steps": 190,
       "score": 290,
       "state": "win",
@@ -76,7 +436,7 @@
       "times_other_reduced": 5
     },
     {
-      "game_id": 9,
+      "game_id": 49,
       "num_steps": 125,
       "score": 120,
       "state": "lose",
@@ -85,7 +445,7 @@
       "times_other_reduced": 8
     },
     {
-      "game_id": 10,
+      "game_id": 50,
       "num_steps": 214,
       "score": 268,
       "state": "lose",
