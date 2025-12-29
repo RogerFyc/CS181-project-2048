@@ -66,9 +66,9 @@ HEURISTIC_WEIGHTS = {
     'empty_critical_bonus': 2000,  # 空格数<=3时的额外奖励（建议范围：1000-5000）
     'empty_critical_threshold': 3,  # 空格数临界阈值（<=此值才给予额外奖励）
     'max_tile_special_penalty': 5000000,  # 最大块在特殊格子的严重惩罚（建议范围：3000-10000）
-    'max_tile_protection_threshold': 16,  # 最大块保护阈值（>=此值才保护，建议范围：8-32）
+    'max_tile_protection_threshold': 32,  # 最大块保护阈值（>=此值才保护，建议范围：8-32）
     'half_max_tile_special_penalty': 30000,  # 最大块/2在特殊格子的严重惩罚（建议范围：2000-6000）
-    'half_max_tile_protection_threshold': 8,  # 最大块/2保护阈值（>=此值才保护，建议范围：4-16）
+    'half_max_tile_protection_threshold': 16,  # 最大块/2保护阈值（>=此值才保护，建议范围：4-16）
     # 关键数字固定保护（获胜条件是512，需要保护关键合成路径上的数字）
     'tile_64_penalty': 100000,    # 64在特殊格子的严重惩罚（大幅增加，64是合成128的关键）
     'tile_128_penalty': 300000,   # 128在特殊格子的极严重惩罚（增加，128是合成256的关键，256是合成512的关键）
