@@ -15,6 +15,12 @@ try:
 except ImportError:
     DQN_AVAILABLE = False
 
+try:
+    from agent_ActorCritic import ActorCriticAgent
+    ACTOR_CRITIC_AVAILABLE = True
+except ImportError:
+    ACTOR_CRITIC_AVAILABLE = False
+
 
 def _clone(mat):
     return [row[:] for row in mat]
@@ -140,6 +146,31 @@ class GameGrid(Frame):
             self._prev_matrix = None
             
             return agent
+        elif ai_type == "ActorCritic" and ACTOR_CRITIC_AVAILABLE:
+            # Actor-Critic agent 需要加载模型或创建新实例
+            # 如果提供了特殊格位置，使用它；否则启用自动检测
+            if self.special_cell_pos is not None:
+                agent = ActorCriticAgent(special_pos=self.special_cell_pos, auto_detect_special=False)
+            else:
+                agent = ActorCriticAgent(special_pos=None, auto_detect_special=True)
+                print("Actor-Critic agent: Special tile position not provided, enabling auto-detection")
+            
+            # 尝试加载已训练的模型
+            model_path = "actor_critic_2048_model.pth"
+            if os.path.exists(model_path):
+                try:
+                    agent.load(model_path)
+                    print(f"Loaded Actor-Critic model from {model_path}")
+                except Exception as e:
+                    print(f"Failed to load Actor-Critic model: {e}")
+                    print("Using untrained Actor-Critic agent")
+            else:
+                print("No Actor-Critic model found. Using untrained agent.")
+            
+            # 初始化前一个状态记录（用于特殊格检测）
+            self._prev_matrix = None
+            
+            return agent
         return MinimaxAgent(depth=self.AI_DEPTH, special_pos=self.special_cell_pos)
 
     def _on_ai_type_change(self):
@@ -154,11 +185,13 @@ class GameGrid(Frame):
     def _init_topbar(self):
         self.topbar = Frame(self)
         self.topbar.grid(row=0, column=0, sticky="ew", padx=8, pady=8)
-        # 根据是否有DQN调整列配置
+        # 根据是否有DQN和ActorCritic调整列配置
+        num_ai_types = 2  # Minimax, Expectimax
         if DQN_AVAILABLE:
-            self.topbar.grid_columnconfigure(7, weight=1)
-        else:
-            self.topbar.grid_columnconfigure(6, weight=1)
+            num_ai_types += 1
+        if ACTOR_CRITIC_AVAILABLE:
+            num_ai_types += 1
+        self.topbar.grid_columnconfigure(num_ai_types + 3, weight=1)  # +3 for Controller, label, and auto-play
 
         # Controller: Human / AI
         Radiobutton(
@@ -184,23 +217,30 @@ class GameGrid(Frame):
             command=self._on_ai_type_change
         ).grid(row=0, column=4, padx=4)
         
+        col = 5
         if DQN_AVAILABLE:
             Radiobutton(
                 self.topbar, text="DQN", variable=self.ai_type_var, value="DQN",
                 command=self._on_ai_type_change
-            ).grid(row=0, column=5, padx=4)
-            auto_play_col = 6
-        else:
-            auto_play_col = 5
+            ).grid(row=0, column=col, padx=4)
+            col += 1
+        
+        if ACTOR_CRITIC_AVAILABLE:
+            Radiobutton(
+                self.topbar, text="ActorCritic", variable=self.ai_type_var, value="ActorCritic",
+                command=self._on_ai_type_change
+            ).grid(row=0, column=col, padx=4)
+            col += 1
 
         # Auto-play
+        auto_play_col = col
         Checkbutton(
             self.topbar, text="Auto-play", variable=self.autoplay_var,
             command=self._on_autoplay_change
         ).grid(row=0, column=auto_play_col, padx=10)
 
-        # 状态标签位置根据是否有DQN调整
-        status_col = 7 if DQN_AVAILABLE else 6
+        # 状态标签位置
+        status_col = auto_play_col + 1
         self.status_label = Label(self.topbar, text="", anchor="w", justify="left")
         self.status_label.grid(row=0, column=status_col, padx=10, sticky="ew")
 
@@ -355,8 +395,8 @@ class GameGrid(Frame):
                 f"State: {state} ({self.KEY_TOGGLE_CONTROLLER}=Toggle, {self.KEY_RESTART}=Restart)"
             )
         else:
-            # DQN agent 不显示 depth 参数
-            if ai_type == "DQN":
+            # DQN 和 ActorCritic agent 不显示 depth 参数
+            if ai_type == "DQN" or ai_type == "ActorCritic":
                 msg = (
                     f"Controller: AI ({ai_type}) | Auto: {auto} | "
                     f"Steps: {self.step_count} | Last: {self.last_move} | State: {state} "
@@ -442,8 +482,22 @@ class GameGrid(Frame):
         self.matrix = logic.new_game(c.GRID_LEN)
         self.history_matrixs = [_clone(self.matrix)]
 
-        # 重置前一个状态记录（用于DQN特殊格检测）
+        # 重置前一个状态记录（用于DQN和ActorCritic特殊格检测）
         if DQN_AVAILABLE and isinstance(self.agent, DQNAgent):
+            self._prev_matrix = None
+            # 如果agent支持自动检测，重置检测状态
+            if hasattr(self.agent, 'special_pos_history'):
+                self.agent.special_pos_history = []
+                self.agent.detected_special_pos = None
+        
+        if ACTOR_CRITIC_AVAILABLE and isinstance(self.agent, ActorCriticAgent):
+            self._prev_matrix = None
+            # 如果agent支持自动检测，重置检测状态
+            if hasattr(self.agent, 'special_pos_history'):
+                self.agent.special_pos_history = []
+                self.agent.detected_special_pos = None
+        
+        if ACTOR_CRITIC_AVAILABLE and isinstance(self.agent, ActorCriticAgent):
             self._prev_matrix = None
             # 如果agent支持自动检测，重置检测状态
             if hasattr(self.agent, 'special_pos_history'):
@@ -530,9 +584,10 @@ class GameGrid(Frame):
             self._update_status()
             return
 
-        # 对于DQN agent，传递上一个状态用于检测特殊格位置
+        # 对于DQN和ActorCritic agent，传递上一个状态用于检测特殊格位置
         prev_mat = None
-        if DQN_AVAILABLE and isinstance(self.agent, DQNAgent) and hasattr(self, '_prev_matrix'):
+        if (DQN_AVAILABLE and isinstance(self.agent, DQNAgent) and hasattr(self, '_prev_matrix')) or \
+           (ACTOR_CRITIC_AVAILABLE and isinstance(self.agent, ActorCriticAgent) and hasattr(self, '_prev_matrix')):
             prev_mat = self._prev_matrix
         
         move = self.agent.choose_move(self.matrix, prev_mat=prev_mat)
@@ -542,7 +597,8 @@ class GameGrid(Frame):
             return
 
         # 保存当前状态作为下一个状态的前一个状态
-        if DQN_AVAILABLE and isinstance(self.agent, DQNAgent):
+        if (DQN_AVAILABLE and isinstance(self.agent, DQNAgent)) or \
+           (ACTOR_CRITIC_AVAILABLE and isinstance(self.agent, ActorCriticAgent)):
             self._prev_matrix = _clone(self.matrix)
 
         self._try_move_by_name(move)
@@ -554,9 +610,10 @@ class GameGrid(Frame):
         if logic.game_state(self.matrix) != "not over":
             return
 
-        # 对于DQN agent，传递上一个状态用于检测特殊格位置
+        # 对于DQN和ActorCritic agent，传递上一个状态用于检测特殊格位置
         prev_mat = None
-        if DQN_AVAILABLE and isinstance(self.agent, DQNAgent) and hasattr(self, '_prev_matrix'):
+        if (DQN_AVAILABLE and isinstance(self.agent, DQNAgent) and hasattr(self, '_prev_matrix')) or \
+           (ACTOR_CRITIC_AVAILABLE and isinstance(self.agent, ActorCriticAgent) and hasattr(self, '_prev_matrix')):
             prev_mat = self._prev_matrix
         
         move = self.agent.choose_move(self.matrix, prev_mat=prev_mat)
@@ -565,7 +622,8 @@ class GameGrid(Frame):
             return
         
         # 保存当前状态作为下一个状态的前一个状态
-        if DQN_AVAILABLE and isinstance(self.agent, DQNAgent):
+        if (DQN_AVAILABLE and isinstance(self.agent, DQNAgent)) or \
+           (ACTOR_CRITIC_AVAILABLE and isinstance(self.agent, ActorCriticAgent)):
             self._prev_matrix = _clone(self.matrix)
         
         self._try_move_by_name(move)
@@ -588,7 +646,7 @@ class GameGrid(Frame):
             self._on_controller_change()
             return
 
-        # toggle AI Type (循环切换: Minimax -> Expectimax -> DQN -> Minimax)
+        # toggle AI Type (循环切换: Minimax -> Expectimax -> DQN -> ActorCritic -> Minimax)
         if key == self.KEY_TOGGLE_AI_TYPE:
             current = self.ai_type_var.get()
             if current == "Minimax":
@@ -596,9 +654,16 @@ class GameGrid(Frame):
             elif current == "Expectimax":
                 if DQN_AVAILABLE:
                     next_type = "DQN"
+                elif ACTOR_CRITIC_AVAILABLE:
+                    next_type = "ActorCritic"
                 else:
                     next_type = "Minimax"
             elif current == "DQN":
+                if ACTOR_CRITIC_AVAILABLE:
+                    next_type = "ActorCritic"
+                else:
+                    next_type = "Minimax"
+            elif current == "ActorCritic":
                 next_type = "Minimax"
             else:
                 next_type = "Minimax"
