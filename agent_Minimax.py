@@ -81,10 +81,10 @@ def _heuristic(mat):
 
     # 权重（你可以后续调参）
     return (
-        empty * 1000
+        empty * 500
         + _log2(max_tile) * 200
-        + smooth * 5
-        + mono * 2
+        + smooth * 100
+        + mono * 100
     )
 
 
@@ -100,9 +100,8 @@ class MinimaxAgent:
         self.special_pos = special_pos
         self.max_min_branches = max_min_branches
 
-    def choose_move(self, mat, prev_mat=None):
-        """返回 'Up'/'Down'/'Left'/'Right' 或 None(无路可走)。
-        Accepts optional `prev_mat` for API compatibility with other agents."""
+    def choose_move(self, mat):
+        """返回 'Up'/'Down'/'Left'/'Right' 或 None(无路可走)。"""
         best_move = None
         best_score = -float("inf")
 
