@@ -4,16 +4,29 @@
 使用此脚本训练 DQN Agent
 
 运行方式：
-    python train_dqn.py
+    python Agents/train_dqn.py
+
+或（推荐，作为模块运行）：
+    python -m Agents.train_dqn
 
 或者修改参数后运行：
-    python train_dqn.py --episodes 20000 --save-freq 1000
+    python Agents/train_dqn.py --episodes 20000 --save-freq 1000
 """
 
 import argparse
 import os
 import sys
-from agent_Qlearning import DQNAgent, train_dqn_agent
+from pathlib import Path
+
+# --- Path bootstrap (allow running this script from inside Agents/) ---
+ROOT_DIR = Path(__file__).resolve().parents[1]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+DATA_DIR = ROOT_DIR / 'Data'
+os.makedirs(DATA_DIR, exist_ok=True)
+
+from Agents.agent_Qlearning import DQNAgent, train_dqn_agent
+
 import logic
 import constants as c
 import random
@@ -25,8 +38,8 @@ def main():
                         help='Number of training episodes (default: 10000)')
     parser.add_argument('--save-freq', type=int, default= 50 ,
                         help='Save model every N episodes (default: 100)')
-    parser.add_argument('--save-path', type=str, default='dqn_2048_model.pth',
-                        help='Path to save model (default: dqn_2048_model.pth)')
+    parser.add_argument('--save-path', type=str, default=str(DATA_DIR / 'dqn_2048_model.pth'),
+                        help='Path to save model (default: Data/dqn_2048_model.pth)')
     parser.add_argument('--load-path', type=str, default=None,
                         help='Path to load existing model (optional)')
     parser.add_argument('--special-pos', type=int, nargs=2, default=None,
@@ -49,7 +62,24 @@ def main():
                         help='Target network update frequency (default: 1000)')
     
     args = parser.parse_args()
-    
+
+    # Normalize paths (treat relative paths as relative to project root)
+    save_path = Path(args.save_path)
+    if not save_path.is_absolute():
+        save_path = ROOT_DIR / save_path
+    args.save_path = str(save_path)
+    if args.load_path:
+        load_path = Path(args.load_path)
+        if not load_path.is_absolute():
+            load_path = ROOT_DIR / load_path
+        args.load_path = str(load_path)
+
+
+    # Ensure save directory exists
+    save_dir = os.path.dirname(args.save_path)
+    if save_dir:
+        os.makedirs(save_dir, exist_ok=True)
+
     print("=" * 60)
     print("DQN Agent Training for 2048 Game")
     print("=" * 60)
@@ -134,4 +164,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

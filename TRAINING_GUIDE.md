@@ -6,16 +6,16 @@
 
 ```bash
 # 基础训练（10000 episodes）
-python train_dqn.py
+python Agents/Agents/train_dqn.py
 
 # 自定义参数训练
-python train_dqn.py --episodes 20000 --save-freq 2000 --learning-rate 0.0005
+python Agents/Agents/train_dqn.py --episodes 20000 --save-freq 2000 --learning-rate 0.0005
 ```
 
 ### 方法 2：在 Python 中直接训练
 
 ```python
-from agent_Qlearning import DQNAgent, train_dqn_agent
+from Agents.agent_Qlearning import DQNAgent, train_dqn_agent
 
 # 创建 agent
 agent = DQNAgent(
@@ -29,7 +29,7 @@ agent = DQNAgent(
 )
 
 # 开始训练
-train_dqn_agent(agent, num_episodes=10000, save_path="dqn_2048_model.pth")
+train_dqn_agent(agent, num_episodes=10000, save_path="Data/dqn_2048_model.pth")
 ```
 
 ---
@@ -91,19 +91,19 @@ Episode 100/10000 | Avg Reward: -1234.56 | Avg Length: 45.23 | Epsilon: 0.951
 ### 快速测试（验证代码）
 
 ```bash
-python train_dqn.py --episodes 1000 --save-freq 500
+python Agents/Agents/train_dqn.py --episodes 1000 --save-freq 500
 ```
 
 ### 基础训练（推荐开始）
 
 ```bash
-python train_dqn.py --episodes 10000 --save-freq 1000
+python Agents/Agents/train_dqn.py --episodes 10000 --save-freq 1000
 ```
 
 ### 深度训练（追求更好性能）
 
 ```bash
-python train_dqn.py \
+python Agents/Agents/train_dqn.py \
     --episodes 50000 \
     --save-freq 2000 \
     --learning-rate 0.0005 \
@@ -114,10 +114,10 @@ python train_dqn.py \
 ### 继续训练（从已有模型继续）
 
 ```bash
-python train_dqn.py \
+python Agents/Agents/train_dqn.py \
     --episodes 20000 \
-    --load-path dqn_2048_model.pth \
-    --save-path dqn_2048_model_v2.pth
+    --load-path Data/dqn_2048_model.pth \
+    --save-path Data/dqn_2048_model_v2.pth
 ```
 
 ---
@@ -128,10 +128,10 @@ python train_dqn.py \
 
 ```bash
 # 第一阶段：快速探索（高探索率）
-python train_dqn.py --episodes 5000 --epsilon-decay 0.99
+python Agents/Agents/train_dqn.py --episodes 5000 --epsilon-decay 0.99
 
 # 第二阶段：精细调优（低探索率）
-python train_dqn.py --episodes 20000 --load-path dqn_2048_model.pth --epsilon-start 0.1 --epsilon-decay 0.999
+python Agents/Agents/train_dqn.py --episodes 20000 --load-path Data/dqn_2048_model.pth --epsilon-start 0.1 --epsilon-decay 0.999
 ```
 
 ### 2. 调整奖励函数
@@ -172,23 +172,23 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 
 ```bash
 # 1. 初始训练（10000 episodes）
-python train_dqn.py --episodes 10000 --save-path dqn_2048_model.pth
+python Agents/Agents/train_dqn.py --episodes 10000 --save-path Data/dqn_2048_model.pth
 
 # 2. 测试模型性能
 # 在游戏中加载模型并测试
 
 # 3. 继续训练（如果效果不够好）
-python train_dqn.py \
+python Agents/Agents/train_dqn.py \
     --episodes 20000 \
-    --load-path dqn_2048_model.pth \
-    --save-path dqn_2048_model_v2.pth \
+    --load-path Data/dqn_2048_model.pth \
+    --save-path Data/dqn_2048_model_v2.pth \
     --learning-rate 0.0005
 
 # 4. 最终优化
-python train_dqn.py \
+python Agents/Agents/train_dqn.py \
     --episodes 20000 \
     --load-path dqn_2048_model_v2.pth \
-    --save-path dqn_2048_model_final.pth \
+    --save-path Data/dqn_2048_model_final.pth \
     --epsilon-start 0.1 \
     --epsilon-decay 0.9995
 ```
@@ -225,7 +225,7 @@ python train_dqn.py \
 
 ### Q5: 训练好的模型在哪里？
 
-模型保存在当前目录下的 `dqn_2048_model.pth`（或你指定的路径）。
+模型保存在当前目录下的 `Data/dqn_2048_model.pth`（或你指定的路径）。
 
 ---
 
@@ -235,15 +235,15 @@ python train_dqn.py \
 
 1. 运行游戏：`python puzzle.py`
 2. 选择 AI Type 为 "DQN"
-3. Agent 会自动加载 `dqn_2048_model.pth`（如果存在）
+3. Agent 会自动加载 `Data/dqn_2048_model.pth`（如果存在）
 
 ### 手动加载
 
 ```python
-from agent_Qlearning import DQNAgent
+from Agents.agent_Qlearning import DQNAgent
 
 agent = DQNAgent(special_pos=(1, 1))
-agent.load("dqn_2048_model.pth")
+agent.load("Data/dqn_2048_model.pth")
 
 # 使用 agent
 move = agent.choose_move(game_matrix)
@@ -265,7 +265,7 @@ Starting training from scratch...
 Training parameters:
   Episodes: 10000
   Save frequency: 1000
-  Save path: dqn_2048_model.pth
+  Save path: Data/dqn_2048_model.pth
   Learning rate: 0.001
   Gamma: 0.99
   Batch size: 64
@@ -277,7 +277,7 @@ Episode 200/10000 | Avg Reward: -987.65 | Avg Length: 52.34 | Epsilon: 0.904
 Episode 10000/10000 | Avg Reward: 1234.56 | Avg Length: 234.56 | Epsilon: 0.010
 ============================================================
 Training completed successfully!
-Final model saved to: dqn_2048_model.pth
+Final model saved to: Data/dqn_2048_model.pth
 Average reward (last 100 episodes): 1234.56
 Average length (last 100 episodes): 234.56
 ============================================================
@@ -289,13 +289,13 @@ Average length (last 100 episodes): 234.56
 
 ```bash
 # 最简单的训练（使用默认参数）
-python train_dqn.py
+python Agents/Agents/train_dqn.py
 
 # 快速测试（1000 episodes）
-python train_dqn.py --episodes 1000
+python Agents/Agents/train_dqn.py --episodes 1000
 
 # 完整训练（20000 episodes）
-python train_dqn.py --episodes 20000 --save-freq 2000
+python Agents/Agents/train_dqn.py --episodes 20000 --save-freq 2000
 ```
 
 ---
@@ -310,3 +310,6 @@ python train_dqn.py --episodes 20000 --save-freq 2000
 
 
 
+
+
+> 也可以使用模块方式运行：`python -m Agents.train_dqn ...`（更推荐，路径更稳）。

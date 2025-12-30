@@ -2,6 +2,11 @@
 # Deep Q-Learning Agent for 2048 with Special Tile
 import numpy as np
 import random
+from pathlib import Path
+
+# Project paths (for default model/data locations)
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = _PROJECT_ROOT / "Data"
 import math
 import logic
 import constants as c
@@ -614,7 +619,7 @@ class DQNAgent:
         print(f"Model loaded from {filepath}")
 
 
-def train_dqn_agent(agent, num_episodes=10000, save_freq=1000, save_path="dqn_model.pth"):
+def train_dqn_agent(agent, num_episodes=10000, save_freq=1000, save_path=str(DATA_DIR / "dqn_2048_model.pth")):
     """
     训练 DQN Agent
     
@@ -737,10 +742,10 @@ if __name__ == "__main__":
     )
     
     # 训练
-    # train_dqn_agent(agent, num_episodes=10000, save_path="dqn_2048_model.pth")
+    # train_dqn_agent(agent, num_episodes=10000, save_path=str(DATA_DIR / "dqn_2048_model.pth"))
     
     # 或者加载已训练的模型
-    # agent.load("dqn_2048_model.pth")
+    # agent.load(str(DATA_DIR / "dqn_2048_model.pth"))
     
     print("DQN Agent initialized. Use train_dqn_agent() to train or load() to load a model.")
     print("Auto-detection enabled: agent will detect special tile position during gameplay.")

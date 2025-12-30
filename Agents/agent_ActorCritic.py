@@ -2,6 +2,11 @@
 # Actor-Critic Reinforcement Learning Agent for 2048 with Special Tile
 import numpy as np
 import random
+from pathlib import Path
+
+# Project paths (for default model/data locations)
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = _PROJECT_ROOT / "Data"
 import math
 import logic
 import constants as c
@@ -606,7 +611,7 @@ class ActorCriticAgent:
                 pass
 
 
-def train_actor_critic_agent(agent, num_episodes=10000, save_freq=1000, save_path="actor_critic_2048_model.pth"):
+def train_actor_critic_agent(agent, num_episodes=10000, save_freq=1000, save_path=str(DATA_DIR / "actor_critic_2048_model.pth")):
     """
     训练 Actor-Critic Agent
     
@@ -728,7 +733,7 @@ def train_actor_critic_agent(agent, num_episodes=10000, save_freq=1000, save_pat
     return episode_rewards, episode_lengths
 
 
-def load_collected_data(data_dir="collected_data"):
+def load_collected_data(data_dir=str(DATA_DIR / "collected_data")):
     """
     从 collected_data 目录加载数据集
     
@@ -787,7 +792,7 @@ def load_collected_data(data_dir="collected_data"):
     return all_trajectories
 
 
-def train_from_collected_data(agent, data_dir="collected_data", num_epochs=10):
+def train_from_collected_data(agent, data_dir=str(DATA_DIR / "collected_data"), num_epochs=10):
     """
     使用 collected_data 数据集训练 Actor-Critic Agent
     

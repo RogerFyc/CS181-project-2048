@@ -5,21 +5,29 @@ from tkinter import (
 )
 import random
 import os
+from pathlib import Path
+
 import logic
 import constants as c
-from agent_Minimax import MinimaxAgent
-from agent_Expectimax import ExpectimaxAgent
+from Agents.agent_Minimax import MinimaxAgent
+from Agents.agent_Expectimax import ExpectimaxAgent
 try:
-    from agent_Qlearning import DQNAgent
+    from Agents.agent_Qlearning import DQNAgent
     DQN_AVAILABLE = True
-except ImportError:
+except Exception as e:
     DQN_AVAILABLE = False
+    print(f"[DQN] unavailable: {e}")
 
 try:
-    from agent_ActorCritic import ActorCriticAgent
+    from Agents.agent_ActorCritic import ActorCriticAgent
     ACTOR_CRITIC_AVAILABLE = True
-except ImportError:
+except Exception as e:
     ACTOR_CRITIC_AVAILABLE = False
+    print(f"[ActorCritic] unavailable: {e}")
+
+
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "Data"
 
 
 def _clone(mat):
@@ -131,10 +139,10 @@ class GameGrid(Frame):
                 print("DQN agent: Special tile position not provided, enabling auto-detection")
             
             # 尝试加载已训练的模型
-            model_path = "dqn_2048_model.pth"
-            if os.path.exists(model_path):
+            model_path = DATA_DIR / "dqn_2048_model.pth"
+            if model_path.exists():
                 try:
-                    agent.load(model_path)
+                    agent.load(str(model_path))
                     print(f"Loaded DQN model from {model_path}")
                 except Exception as e:
                     print(f"Failed to load DQN model: {e}")
@@ -156,10 +164,10 @@ class GameGrid(Frame):
                 print("Actor-Critic agent: Special tile position not provided, enabling auto-detection")
             
             # 尝试加载已训练的模型
-            model_path = "actor_critic_2048_model.pth"
-            if os.path.exists(model_path):
+            model_path = DATA_DIR / "actor_critic_2048_model.pth"
+            if model_path.exists():
                 try:
-                    agent.load(model_path)
+                    agent.load(str(model_path))
                     print(f"Loaded Actor-Critic model from {model_path}")
                 except Exception as e:
                     print(f"Failed to load Actor-Critic model: {e}")
@@ -590,7 +598,12 @@ class GameGrid(Frame):
            (ACTOR_CRITIC_AVAILABLE and isinstance(self.agent, ActorCriticAgent) and hasattr(self, '_prev_matrix')):
             prev_mat = self._prev_matrix
         
-        move = self.agent.choose_move(self.matrix, prev_mat=prev_mat)
+        # 只对需要 prev_mat 的 agent 才传这个参数
+        if prev_mat is None:
+            move = self.agent.choose_move(self.matrix)
+        else:
+            move = self.agent.choose_move(self.matrix, prev_mat=prev_mat)
+
         if move is None:
             self.ai_job = None
             self._update_status()
