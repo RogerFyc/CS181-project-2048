@@ -29,6 +29,8 @@ CS181-project-2048/
 │  ├─ dqn_2048_model.pth
 │  ├─ actor_critic_2048_model.pth
 │  └─ collected_data/        # RL dataset
+└─ Reports/                  # Evaluation data
+└─ Evaluation/               # Evaluation visualization
 └─ img/                      
 ```
 
