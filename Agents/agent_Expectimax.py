@@ -26,7 +26,7 @@ def _empty_cells(mat):
 
 
 def _apply_special_cell_effect(mat, special_pos):
-    """改版规则：成功移动后，特殊格子上的值如果 >2，则整除2。"""
+    """改版规则：成功移动后，特殊格子上的值如果 >2 则整除2。"""
     if special_pos is None:
         return mat
     i, j = special_pos
@@ -36,7 +36,7 @@ def _apply_special_cell_effect(mat, special_pos):
 
 
 def _add_two_at(mat, pos):
-    """你的版本：新 tile 只会生成 2。"""
+    """新 tile 只会生成 2 """
     i, j = pos
     mat[i][j] = 2
     return mat
@@ -90,7 +90,7 @@ DANGER_PARAMS = {
 
 def _heuristic(mat, special_pos=None):
     """
-    优化的启发式评估函数：越大越好（站在玩家角度）。
+    优化的启发式评估函数：越大越好
     包含：空格、最大块、平滑度、单调性、角落策略、合并潜力、特殊格子考虑。
     """
     n = len(mat)
@@ -284,29 +284,25 @@ def _heuristic(mat, special_pos=None):
 
 class ExpectimaxAgent:
     """
-    优化的 Expectimax Agent：
-    - Max层：玩家选方向（最大化期望得分）
-    - Chance层：随机生成新 tile 的位置（期望值计算）
+    优化的 Expectimax Agent
+    - Max层:玩家选方向（最大化期望得分）
+    - Chance层:随机生成新 tile 的位置（期望值计算）
     - 改进的启发式函数和更智能的 chance 节点选择
     """
 
     def __init__(self, depth=2, special_pos=None, max_chance_branches=6, sample_chance=False):
         """
         可调参数说明：
-        depth: 搜索深度（建议范围：2-5）
+        depth: 搜索深度(建议范围:2-5)
             - 增加：更准确但更慢（指数级增长）
             - 减少：更快但可能不够准确
-            - 推荐：3-4（平衡点）
+            - 推荐:3-4 平衡点
         
-        max_chance_branches: chance 节点分支数限制（建议范围：4-10）
+        max_chance_branches: chance 节点分支数限制（建议范围:4-10)
             - 增加：更准确但更慢
             - 减少：更快但可能忽略重要情况
-            - 推荐：6-8
-        
-        sample_chance: 是否使用采样模式
-            - True: 随机采样，更快但有随机性
-            - False: 智能选择危险位置，更保守但更稳定
-            - 推荐：False（更稳定）
+            - 推荐:6-8
+
         """
         self.depth = depth
         self.special_pos = special_pos
@@ -376,7 +372,7 @@ class ExpectimaxAgent:
     
     def choose_move(self, mat, prev_mat=None):
         """
-        返回 'Up'/'Down'/'Left'/'Right' 或 None（无路可走）。
+        返回 'Up'/'Down'/'Left'/'Right' 或 None
         优化：当棋盘填满时，优先考虑可以产生合并的方向。
         """
         # 检查棋盘是否填满
@@ -501,7 +497,7 @@ class ExpectimaxAgent:
     def _get_dangerous_positions(self, mat, empties):
         """
         识别"危险"位置：角落、边缘、或会阻碍合并的位置。
-        这些位置如果出现新 tile，通常更不利。
+        这些位置如果出现新 tile 通常更不利
         """
         n = len(mat)
         dangerous = []

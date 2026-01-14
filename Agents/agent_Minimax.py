@@ -28,7 +28,7 @@ def _empty_cells(mat):
 
 
 def _apply_special_cell_effect(mat, special_pos):
-    """改版规则：成功移动后，特殊格子上的值如果 >2，则整除2。"""
+    """改版规则：成功移动后，特殊格子上的值如果 >2,则整除2。"""
     if special_pos is None:
         return mat
     i, j = special_pos
@@ -38,7 +38,7 @@ def _apply_special_cell_effect(mat, special_pos):
 
 
 def _add_two_at(mat, pos):
-    """在指定空位放入2（你的版本只会生成2）。"""
+    """在指定空位放入2"""
     i, j = pos
     mat[i][j] = 2
     return mat
@@ -50,8 +50,8 @@ def _log2(v):
 
 def _heuristic(mat):
     """
-    评估函数：越大越好（站在玩家角度）。
-    典型要素：空格多、最大块大、局面更“平滑”、更“单调”。
+    评估函数：越大越好
+    典型要素：空格多、最大块大、局面更平滑、更单调
     """
     n = len(mat)
     logs = [[_log2(mat[i][j]) for j in range(n)] for i in range(n)]
@@ -90,9 +90,9 @@ def _heuristic(mat):
 
 class MinimaxAgent:
     """
-    Minimax（对抗最坏情况）：
-    - Max层：玩家选方向
-    - Min层：对手选“2”出现的位置（最坏落点）
+    Minimax (对抗最坏情况）：
+    - Max层:玩家选方向
+    - Min层:对手选2出现的位置 (最坏落点）
     """
 
     def __init__(self, depth=3, special_pos=None, max_min_branches=6):
@@ -101,7 +101,7 @@ class MinimaxAgent:
         self.max_min_branches = max_min_branches
 
     def choose_move(self, mat):
-        """返回 'Up'/'Down'/'Left'/'Right' 或 None(无路可走)。"""
+        """返回 'Up'/'Down'/'Left'/'Right' 或 None"""
         best_move = None
         best_score = -float("inf")
 
@@ -122,7 +122,7 @@ class MinimaxAgent:
 
     def _min_node(self, mat, depth):
         """
-        Min层:选择最坏的 tile 出现位置(只会出现2)。
+        Min层:选择最坏的 tile 出现位置
         """
         state = logic.game_state(mat)
         if depth <= 0 or state != "not over":
@@ -132,7 +132,7 @@ class MinimaxAgent:
         if not empties:
             return _heuristic(mat)
 
-        # 分支太多会爆炸：只选一部分“更可能更坏”的落点评估
+        # 分支太多会爆炸：只选一部分 更可能更坏 的落点评估
         candidates = empties
         if len(empties) > self.max_min_branches:
             # 先粗评一下每个落点的启发式分数，取最差的若干个

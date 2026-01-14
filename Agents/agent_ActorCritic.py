@@ -58,7 +58,7 @@ def _apply_special_cell_effect(mat, special_pos):
 
 
 def _log2(v):
-    """计算 log2，空值为 0"""
+    """计算 log2 空值为 0"""
     return 0 if v <= 0 else int(math.log2(v))
 
 
@@ -607,7 +607,7 @@ class ActorCriticAgent:
                 if 'critic_optimizer_state_dict' in checkpoint:
                     self.critic_optimizer.load_state_dict(checkpoint['critic_optimizer_state_dict'])
             except Exception:
-                # 如果优化器状态不匹配，忽略（会使用默认状态）
+                # 如果优化器状态不匹配 忽略）
                 pass
 
 
@@ -858,7 +858,7 @@ def train_from_collected_data(agent, data_dir=str(DATA_DIR / "collected_data"), 
     print("Training from collected data completed!")
 
 
-# 使用示例
+
 if __name__ == "__main__":
     agent = ActorCriticAgent(
         special_pos=None,

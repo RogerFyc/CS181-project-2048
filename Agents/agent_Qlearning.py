@@ -274,7 +274,7 @@ class DQNAgent:
             
         Returns:
             state_vector: 状态向量 (18维)
-                - 前16维: 4x4棋盘的值（log2编码，空值为0）
+                - 前16维: 4x4棋盘的值(log2编码 空值为0)
                 - 后2维: 特殊格位置 (i, j)
         """
         state = []
@@ -343,7 +343,7 @@ class DQNAgent:
     def _calculate_merge_score(self, state_mat, next_state_mat):
         """
         计算合并得分（基于合并产生的值，而不仅仅是数量）
-        返回合并产生的总价值（log2编码）
+        返回合并产生的总价值(log2编码)
         """
         # 检测空格数量变化（合并会产生空格）
         state_empty = sum(1 for i in range(4) for j in range(4) if state_mat[i][j] == 0)
