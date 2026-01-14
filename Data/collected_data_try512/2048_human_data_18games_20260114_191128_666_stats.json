@@ -1,0 +1,16 @@
+{
+  "total_games": 1,
+  "total_steps": 554,
+  "timestamp": "2026-01-14T19:11:28.694310",
+  "games": [
+    {
+      "game_id": 18,
+      "num_steps": 554,
+      "score": 610,
+      "state": "win",
+      "max_tile": 512,
+      "times_max_reduced": 0,
+      "times_other_reduced": 26
+    }
+  ]
+}
