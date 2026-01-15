@@ -54,8 +54,8 @@ def main():
                         help='Hidden layer size (default: 256)')
     parser.add_argument('--use-collected-data', action='store_true',
                         help='Train using collected_data directory instead of self-play')
-    parser.add_argument('--data-dir', type=str, default=str(DATA_DIR / 'collected_data'),
-                        help='Directory containing collected data (default: Data/collected_data)')
+    parser.add_argument('--data-dir', type=str, default=str(DATA_DIR / 'collected_data_try512'),
+                        help='Directory containing collected data (default: Data/collected_data_try512)')
     parser.add_argument('--num-epochs', type=int, default=10,
                         help='Number of epochs when training from collected data (default: 10)')
     

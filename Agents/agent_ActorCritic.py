@@ -733,7 +733,7 @@ def train_actor_critic_agent(agent, num_episodes=10000, save_freq=1000, save_pat
     return episode_rewards, episode_lengths
 
 
-def load_collected_data(data_dir=str(DATA_DIR / "collected_data")):
+def load_collected_data(data_dir=str(DATA_DIR / "collected_data_try512")):
     """
     从 collected_data 目录加载数据集
     
