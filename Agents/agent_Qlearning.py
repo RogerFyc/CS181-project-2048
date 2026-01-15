@@ -47,7 +47,7 @@ def _clone(mat):
 
 
 def _apply_special_cell_effect(mat, special_pos):
-    """改版规则：成功移动后，特殊格子上的值如果 >2，则整除2。"""
+    """改版规则：成功移动后，特殊格子上的值如果 >2 则整除2。"""
     if special_pos is None:
         return mat
     i, j = special_pos
@@ -57,13 +57,13 @@ def _apply_special_cell_effect(mat, special_pos):
 
 
 def _log2(v):
-    """计算 log2，空值为 0"""
+    """计算 log2 空值为 0"""
     return 0 if v <= 0 else int(math.log2(v))
 
 
 class QNetwork(nn.Module):
     """
-    Deep Q-Network: 输入状态，输出每个动作的Q值
+    Deep Q-Network: 输入状态 -> 输出每个动作的Q值
     """
     def __init__(self, state_size=18, action_size=4, hidden_size=256):
         """
@@ -406,7 +406,7 @@ class DQNAgent:
     
     def select_action(self, state_mat, training=True):
         """
-        选择动作（epsilon-greedy策略）
+        选择动作(epsilon-greedy策略)
         
         Args:
             state_mat: 当前状态矩阵
@@ -726,7 +726,7 @@ def train_dqn_agent(agent, num_episodes=10000, save_freq=1000, save_path=str(DAT
     return episode_rewards, episode_lengths
 
 
-# 使用示例
+
 if __name__ == "__main__":
     agent = DQNAgent(
         special_pos=None,  

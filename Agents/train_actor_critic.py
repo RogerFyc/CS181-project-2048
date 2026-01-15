@@ -34,7 +34,7 @@ import random
 
 def main():
     parser = argparse.ArgumentParser(description='Train Actor-Critic Agent for 2048')
-    parser.add_argument('--episodes', type=int, default=500,
+    parser.add_argument('--episodes', type=int, default=1000,
                         help='Number of training episodes (default: 500)')
     parser.add_argument('--save-freq', type=int, default=100,
                         help='Save model every N episodes (default: 50)')
