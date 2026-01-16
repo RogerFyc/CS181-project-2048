@@ -1,0 +1,65 @@
+======================================================================
+2048 GAME DATA ANALYSIS REPORT (ActorCritic_Pretrained Agent - 定500步)
+======================================================================
+
+1. MAX TILE OCCURRENCES:
+----------------------------------------
+Max Tile 256: 6 times (12.0%)
+Max Tile 128: 32 times (64.0%)
+Max Tile 64: 12 times (24.0%)
+
+Total games: 50
+
+2. AVERAGE VALUES:
+----------------------------------------
+special_other_util: 除最大值外其余值利用特殊格的概率
+  Average: 0.8388
+  Min: 0.5446
+  Max: 0.9597
+  Count: 50
+
+max_tile:
+  Average: 128.0000
+  Min: 64.0000
+  Max: 256.0000
+  Count: 50
+
+special_max_util: 最大值利用特殊格的概率
+  Average: 0.0000
+  Min: 0.0000
+  Max: 0.0000
+  Count: 50
+
+3. UTILITY VS MAX TILE TREND: special_other_util与最大值
+----------------------------------------
+Correlation: 0.019
+Data points: 50
+Trend line: y = 0.0000x + 0.8348
+R-squared: 0.0004
+
+4. UTILITY BY MAX TILE: special_other_util
+----------------------------------------
+
+Max Tile 256:
+  Games: 6
+  Mean Special: 0.8344
+  Median Special: 0.8738
+  Range: 0.6480 - 0.9570
+  Std Dev: 0.1119
+
+Max Tile 128:
+  Games: 32
+  Mean Special: 0.8434
+  Median Special: 0.8578
+  Range: 0.7160 - 0.9597
+  Std Dev: 0.0763
+
+Max Tile 64:
+  Games: 12
+  Mean Special: 0.8285
+  Median Special: 0.8480
+  Range: 0.5446 - 0.9420
+  Std Dev: 0.1049
+
+
+======================================================================

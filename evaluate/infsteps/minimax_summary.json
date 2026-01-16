@@ -1,0 +1,16 @@
+{
+  "model_name": "Minimax",
+  "total_games": 50,
+  "win_count": 43,
+  "lose_count": 0,
+  "stuck_count": 7,
+  "win_rate": 86.0,
+  "avg_win_steps": 238.3953488372093,
+  "avg_steps": 289.52,
+  "avg_max_tile": 235.52,
+  "max_tile_distribution": {
+    "256": 43,
+    "128": 5,
+    "64": 2
+  }
+}

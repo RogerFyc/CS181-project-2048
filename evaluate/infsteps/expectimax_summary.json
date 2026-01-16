@@ -1,0 +1,16 @@
+{
+  "model_name": "Expectimax",
+  "total_games": 50,
+  "win_count": 35,
+  "lose_count": 0,
+  "stuck_count": 15,
+  "win_rate": 70.0,
+  "avg_win_steps": 309.4,
+  "avg_steps": 415.36,
+  "avg_max_tile": 208.64,
+  "max_tile_distribution": {
+    "256": 35,
+    "128": 8,
+    "64": 7
+  }
+}

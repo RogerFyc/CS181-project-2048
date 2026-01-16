@@ -1,0 +1,17 @@
+{
+  "model_name": "DQN",
+  "total_games": 50,
+  "win_count": 0,
+  "lose_count": 19,
+  "stuck_count": 31,
+  "win_rate": 0.0,
+  "avg_win_steps": 0,
+  "avg_steps": 484.48,
+  "avg_max_tile": 62.08,
+  "max_tile_distribution": {
+    "16": 2,
+    "64": 27,
+    "128": 7,
+    "32": 14
+  }
+}

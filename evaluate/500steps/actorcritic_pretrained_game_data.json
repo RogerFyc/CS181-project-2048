@@ -1,0 +1,552 @@
+[
+  {
+    "max_tile": 64,
+    "special_other_util": 0.872,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.8561151079136691,
+    "special_max_util": 0.0,
+    "steps": 278,
+    "game_state": "lose",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.9285714285714286,
+    "special_max_util": 0.0,
+    "steps": 294,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 256,
+    "special_other_util": 0.8756218905472637,
+    "special_max_util": 0.0,
+    "steps": 402,
+    "game_state": "lose",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.838,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.7785977859778598,
+    "special_max_util": 0.0,
+    "steps": 271,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.9253731343283582,
+    "special_max_util": 0.0,
+    "steps": 201,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.9272727272727272,
+    "special_max_util": 0.0,
+    "steps": 220,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.8412698412698413,
+    "special_max_util": 0.0,
+    "steps": 315,
+    "game_state": "lose",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 256,
+    "special_other_util": 0.9321533923303835,
+    "special_max_util": 0.0,
+    "steps": 339,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 256,
+    "special_other_util": 0.956989247311828,
+    "special_max_util": 0.0,
+    "steps": 279,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.813953488372093,
+    "special_max_util": 0.0,
+    "steps": 172,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.716,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.9285714285714286,
+    "special_max_util": 0.0,
+    "steps": 210,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.7884615384615384,
+    "special_max_util": 0.0,
+    "steps": 260,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.7473684210526316,
+    "special_max_util": 0.0,
+    "steps": 285,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.806,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.9187817258883249,
+    "special_max_util": 0.0,
+    "steps": 197,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.8781869688385269,
+    "special_max_util": 0.0,
+    "steps": 353,
+    "game_state": "lose",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.807843137254902,
+    "special_max_util": 0.0,
+    "steps": 255,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.876,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.86,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 256,
+    "special_other_util": 0.8719211822660099,
+    "special_max_util": 0.0,
+    "steps": 406,
+    "game_state": "lose",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.8197879858657244,
+    "special_max_util": 0.0,
+    "steps": 283,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.9509803921568627,
+    "special_max_util": 0.0,
+    "steps": 204,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.744,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.9304347826086956,
+    "special_max_util": 0.0,
+    "steps": 115,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.738,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.9184782608695652,
+    "special_max_util": 0.0,
+    "steps": 368,
+    "game_state": "lose",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.8443708609271523,
+    "special_max_util": 0.0,
+    "steps": 302,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.9596774193548387,
+    "special_max_util": 0.0,
+    "steps": 248,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.9308510638297872,
+    "special_max_util": 0.0,
+    "steps": 188,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 256,
+    "special_other_util": 0.648,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.7714285714285715,
+    "special_max_util": 0.0,
+    "steps": 245,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.736,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.858,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.8707482993197279,
+    "special_max_util": 0.0,
+    "steps": 147,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.9179487179487179,
+    "special_max_util": 0.0,
+    "steps": 195,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.7128205128205128,
+    "special_max_util": 0.0,
+    "steps": 195,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.8594594594594595,
+    "special_max_util": 0.0,
+    "steps": 370,
+    "game_state": "lose",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.738,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.892,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.9351851851851852,
+    "special_max_util": 0.0,
+    "steps": 216,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.7293729372937293,
+    "special_max_util": 0.0,
+    "steps": 303,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.8275862068965517,
+    "special_max_util": 0.0,
+    "steps": 203,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.8739255014326648,
+    "special_max_util": 0.0,
+    "steps": 349,
+    "game_state": "lose",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.777292576419214,
+    "special_max_util": 0.0,
+    "steps": 229,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.5445544554455446,
+    "special_max_util": 0.0,
+    "steps": 101,
+    "game_state": "lose",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 256,
+    "special_other_util": 0.722,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.942,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      1
+    ]
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "model_name": "Actor-Critic",
+  "total_games": 50,
+  "win_count": 7,
+  "lose_count": 27,
+  "stuck_count": 16,
+  "win_rate": 14.000000000000002,
+  "avg_win_steps": 252.14285714285714,
+  "avg_steps": 342.14,
+  "avg_max_tile": 127.36,
+  "max_tile_distribution": {
+    "64": 13,
+    "128": 29,
+    "256": 7,
+    "32": 1
+  }
+}

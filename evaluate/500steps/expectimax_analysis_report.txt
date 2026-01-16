@@ -1,0 +1,81 @@
+======================================================================
+2048 GAME DATA ANALYSIS REPORT (Expectimax Agent - 定500步)
+======================================================================
+
+1. MAX TILE OCCURRENCES:
+----------------------------------------
+Max Tile 512: 1 times (2.0%)
+Max Tile 256: 9 times (18.0%)
+Max Tile 128: 22 times (44.0%)
+Max Tile 64: 15 times (30.0%)
+Max Tile 32: 3 times (6.0%)
+
+Total games: 50
+
+2. AVERAGE VALUES:
+----------------------------------------
+special_other_util: 除最大值外其余值利用特殊格的概率
+  Average: 0.2368
+  Min: 0.0760
+  Max: 0.4340
+  Count: 50
+
+max_tile:
+  Average: 133.7600
+  Min: 32.0000
+  Max: 512.0000
+  Count: 50
+
+special_max_util: 最大值利用特殊格的概率
+  Average: 0.0106
+  Min: 0.0000
+  Max: 0.0240
+  Count: 50
+
+3. UTILITY VS MAX TILE TREND: special_other_util与最大值
+----------------------------------------
+Correlation: -0.140
+Data points: 50
+Trend line: y = -0.0001x + 0.2554
+R-squared: 0.0195
+
+4. UTILITY BY MAX TILE: special_other_util
+----------------------------------------
+
+Max Tile 512:
+  Games: 1
+  Mean Special: 0.0920
+  Median Special: 0.0920
+  Range: 0.0920 - 0.0920
+  Std Dev: 0.0000
+
+Max Tile 256:
+  Games: 9
+  Mean Special: 0.2391
+  Median Special: 0.2420
+  Range: 0.0760 - 0.4340
+  Std Dev: 0.1094
+
+Max Tile 128:
+  Games: 22
+  Mean Special: 0.2427
+  Median Special: 0.2390
+  Range: 0.0920 - 0.3940
+  Std Dev: 0.0785
+
+Max Tile 64:
+  Games: 15
+  Mean Special: 0.2350
+  Median Special: 0.2560
+  Range: 0.1080 - 0.3469
+  Std Dev: 0.0826
+
+Max Tile 32:
+  Games: 3
+  Mean Special: 0.2433
+  Median Special: 0.2480
+  Range: 0.1680 - 0.3140
+  Std Dev: 0.0597
+
+
+======================================================================

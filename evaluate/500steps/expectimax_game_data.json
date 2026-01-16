@@ -1,0 +1,552 @@
+[
+  {
+    "max_tile": 256,
+    "special_other_util": 0.174,
+    "special_max_util": 0.002,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.12,
+    "special_max_util": 0.01,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 256,
+    "special_other_util": 0.076,
+    "special_max_util": 0.018,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.278,
+    "special_max_util": 0.01,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.314,
+    "special_max_util": 0.012,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 256,
+    "special_other_util": 0.242,
+    "special_max_util": 0.008,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 256,
+    "special_other_util": 0.434,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.198,
+    "special_max_util": 0.024,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.304,
+    "special_max_util": 0.016,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.248,
+    "special_max_util": 0.014,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.128,
+    "special_max_util": 0.018,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.358,
+    "special_max_util": 0.004,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.092,
+    "special_max_util": 0.006,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.242,
+    "special_max_util": 0.01,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 32,
+    "special_other_util": 0.168,
+    "special_max_util": 0.016,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.236,
+    "special_max_util": 0.008,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.204,
+    "special_max_util": 0.016,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.33,
+    "special_max_util": 0.006,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.228,
+    "special_max_util": 0.018,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.256,
+    "special_max_util": 0.008,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 256,
+    "special_other_util": 0.298,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 32,
+    "special_other_util": 0.314,
+    "special_max_util": 0.018,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.256,
+    "special_max_util": 0.016,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 256,
+    "special_other_util": 0.16,
+    "special_max_util": 0.002,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.176,
+    "special_max_util": 0.008,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.17,
+    "special_max_util": 0.014,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.31,
+    "special_max_util": 0.002,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.29,
+    "special_max_util": 0.008,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.134,
+    "special_max_util": 0.006,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.108,
+    "special_max_util": 0.016,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.332,
+    "special_max_util": 0.01,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.332,
+    "special_max_util": 0.006,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.176,
+    "special_max_util": 0.008,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 256,
+    "special_other_util": 0.13,
+    "special_max_util": 0.004,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.112,
+    "special_max_util": 0.01,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.2,
+    "special_max_util": 0.022,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.246,
+    "special_max_util": 0.02,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.134,
+    "special_max_util": 0.018,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.394,
+    "special_max_util": 0.008,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 512,
+    "special_other_util": 0.092,
+    "special_max_util": 0.004,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      2
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.202,
+    "special_max_util": 0.014,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.344,
+    "special_max_util": 0.012,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.248,
+    "special_max_util": 0.012,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 32,
+    "special_other_util": 0.248,
+    "special_max_util": 0.022,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.34,
+    "special_max_util": 0.01,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.244,
+    "special_max_util": 0.01,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      1
+    ]
+  },
+  {
+    "max_tile": 64,
+    "special_other_util": 0.3469387755102041,
+    "special_max_util": 0.006802721088435374,
+    "steps": 294,
+    "game_state": "lose",
+    "special_pos": [
+      1,
+      2
+    ]
+  },
+  {
+    "max_tile": 128,
+    "special_other_util": 0.234,
+    "special_max_util": 0.012,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 256,
+    "special_other_util": 0.272,
+    "special_max_util": 0.008,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      2,
+      1
+    ]
+  },
+  {
+    "max_tile": 256,
+    "special_other_util": 0.366,
+    "special_max_util": 0.0,
+    "steps": 500,
+    "game_state": "not over",
+    "special_pos": [
+      1,
+      2
+    ]
+  }
+]

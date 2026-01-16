@@ -1,0 +1,65 @@
+======================================================================
+2048 GAME DATA ANALYSIS REPORT (DQN_Pretrained Agent - 定500步)
+======================================================================
+
+1. MAX TILE OCCURRENCES:
+----------------------------------------
+Max Tile 128: 6 times (12.0%)
+Max Tile 64: 27 times (54.0%)
+Max Tile 32: 17 times (34.0%)
+
+Total games: 50
+
+2. AVERAGE VALUES:
+----------------------------------------
+special_other_util: 除最大值外其余值利用特殊格的概率
+  Average: 0.6793
+  Min: 0.3916
+  Max: 0.9300
+  Count: 50
+
+max_tile:
+  Average: 60.8000
+  Min: 32.0000
+  Max: 128.0000
+  Count: 50
+
+special_max_util: 最大值利用特殊格的概率
+  Average: 0.0050
+  Min: 0.0000
+  Max: 0.0250
+  Count: 50
+
+3. UTILITY VS MAX TILE TREND: special_other_util与最大值
+----------------------------------------
+Correlation: -0.088
+Data points: 50
+Trend line: y = -0.0005x + 0.7100
+R-squared: 0.0078
+
+4. UTILITY BY MAX TILE: special_other_util
+----------------------------------------
+
+Max Tile 128:
+  Games: 6
+  Mean Special: 0.6754
+  Median Special: 0.7100
+  Range: 0.4706 - 0.8340
+  Std Dev: 0.1302
+
+Max Tile 64:
+  Games: 27
+  Mean Special: 0.6576
+  Median Special: 0.6262
+  Range: 0.4500 - 0.9040
+  Std Dev: 0.1508
+
+Max Tile 32:
+  Games: 17
+  Mean Special: 0.7151
+  Median Special: 0.7800
+  Range: 0.3916 - 0.9300
+  Std Dev: 0.1891
+
+
+======================================================================

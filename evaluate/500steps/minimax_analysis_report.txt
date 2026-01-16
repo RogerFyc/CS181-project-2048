@@ -1,0 +1,73 @@
+======================================================================
+2048 GAME DATA ANALYSIS REPORT (Minimax Agent - 定500步)
+======================================================================
+
+1. MAX TILE OCCURRENCES:
+----------------------------------------
+Max Tile 512: 10 times (20.0%)
+Max Tile 256: 31 times (62.0%)
+Max Tile 128: 7 times (14.0%)
+Max Tile 64: 2 times (4.0%)
+
+Total games: 50
+
+2. AVERAGE VALUES:
+----------------------------------------
+special_other_util: 除最大值外其余值利用特殊格的概率
+  Average: 0.5986
+  Min: 0.0860
+  Max: 0.9380
+  Count: 50
+
+max_tile:
+  Average: 281.6000
+  Min: 64.0000
+  Max: 512.0000
+  Count: 50
+
+special_max_util: 最大值利用特殊格的概率
+  Average: 0.0002
+  Min: 0.0000
+  Max: 0.0040
+  Count: 50
+
+3. UTILITY VS MAX TILE TREND: special_other_util与最大值
+----------------------------------------
+Correlation: -0.737
+Data points: 50
+Trend line: y = -0.0014x + 0.9897
+R-squared: 0.5438
+
+4. UTILITY BY MAX TILE: special_other_util
+----------------------------------------
+
+Max Tile 512:
+  Games: 10
+  Mean Special: 0.2610
+  Median Special: 0.2170
+  Range: 0.0860 - 0.5520
+  Std Dev: 0.1431
+
+Max Tile 256:
+  Games: 31
+  Mean Special: 0.6519
+  Median Special: 0.6160
+  Range: 0.2760 - 0.8860
+  Std Dev: 0.1764
+
+Max Tile 128:
+  Games: 7
+  Mean Special: 0.7511
+  Median Special: 0.6660
+  Range: 0.6060 - 0.9280
+  Std Dev: 0.1216
+
+Max Tile 64:
+  Games: 2
+  Mean Special: 0.9260
+  Median Special: 0.9260
+  Range: 0.9140 - 0.9380
+  Std Dev: 0.0120
+
+
+======================================================================
